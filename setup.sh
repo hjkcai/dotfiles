@@ -2,6 +2,7 @@
 
 # oh-my-zsh
 # TODO
+curl https://raw.githubusercontent.com/hjkcai/dotfiles/master/zshrc > $HOME/.zshrc
 
 # Node.js
 echo Installing tj/n
