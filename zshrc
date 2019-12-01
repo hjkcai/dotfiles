@@ -13,12 +13,37 @@ fi
 alias zl="z -l"
 alias zc="z -c"
 
+# npm
+alias ti="tnpm i"
+alias tid="tnpm i -D"
+alias tr="tnpm run"
+alias tp="tnpm publish"
+alias trb="tnpm run build"
+alias trd="tnpm run dev"
+alias trt="tnpm run test"
+alias ni="npm i"
+alias nid="npm i -D"
+alias nr="npm run"
+alias np="npm publish"
+alias nrb="npm run build"
+alias nrd="npm run dev"
+alias nrt="npm run test"
+alias npmc="npm --registry=https://registry.npm.taobao.org"
+alias yarnc="yarn --registry=https://registry.npm.taobao.org"
+
 # adb
-alias adb-screencap="adb exec-out screencap -p | impbcopy -"
+alias adb-scr="adb exec-out screencap -p"
+alias adb-scrcpy="adb exec-out screencap -p | impbcopy -"
 alias adb-deeplink="adb shell am start -W -a android.intent.action.VIEW -d"
 alias adb-paste="adb shell am broadcast -a clipper.get"
 alias adb-copy="adb shell am broadcast -a clipper.set -e text"
 alias adb-kill="adb shell am force-stop"
+
+# YYB
+function tmast-webview() {
+  encodedUrl=$(node -e "console.log(decodeURIComponent('$1'))")
+  adb-deeplink "tmast://webview?url=$encodedUrl"
+}
 
 # Chrome Canary with debug proxy enabled
 alias canary="open /Applications/Google\ Chrome\ Canary.app --args --proxy-server=http://127.0.0.1:8888"
@@ -42,12 +67,21 @@ if type "flutter" > /dev/null; then
 fi
 
 # Proxies
-alias clash-proxy="export https_proxy=http://127.0.0.1:7890; export http_proxy=http://127.0.0.1:7890; export all_proxy=socks5h://127.0.0.1:7891"
-alias unset-proxy="unset https_proxy; unset http_proxy; unset all_proxy"
+alias unset-proxy="unset http_proxy && unset https_proxy"
+alias ioa-proxy="export http_proxy=http://127.0.0.1:12639 && export https_proxy=http://127.0.0.1:12639"
+alias ss-proxy="export http_proxy=http://127.0.0.1:1080 && export https_proxy=http://127.0.0.1:1080"
+alias clash-proxy="export http_proxy=http://127.0.0.1:7890 && export https_proxy=http://127.0.0.1:7890"
 
 # Other
 export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
 alias jitouch="killall Jitouch; open $HOME/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app"
+alias show-hidden="chflags nohidden"
+alias hide-hidden="chflags hidden"
+
+# Private
+if [ -f "$HOME/.zshrc-private" ]; then
+  source "$HOME/.zshrc-private"
+fi
 
 # oh-my-zsh config
 export ZSH="$HOME/.oh-my-zsh"
