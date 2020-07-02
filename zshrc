@@ -31,6 +31,12 @@ alias nrt="npm run test"
 alias npmc="npm --registry=https://registry.npm.taobao.org"
 alias yarnc="yarn --registry=https://registry.npm.taobao.org"
 
+# TypeScript
+alias tscp="tsc -p ."
+alias tscpw="tsc -p . -w"
+alias tscpp="tsc -p tsconfig.prod.json"
+alias tscppw="tsc -p tsconfig.prod.json -w"
+
 # adb
 alias adb-scr="adb exec-out screencap -p"
 alias adb-scrcpy="adb exec-out screencap -p | impbcopy -"
