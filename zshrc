@@ -102,5 +102,6 @@ AGKOZAK_CUSTOM_RPROMPT=$'%{\e[1A%}%(?..%B%F{red}(%?%)%f%b )%F{243}%*%f%{\e[1B%}'
 AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
+AGKOZAK_FORCE_ASYNC_METHOD=none
 
 hash -d Projects=$HOME/Projects
