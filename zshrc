@@ -13,13 +13,6 @@ fi
 alias zl="z -l"
 alias zc="z -c"
 
-# exa
-alias ls='exa'
-alias l='exa -lF --time-style=long-iso'
-alias ll='exa -lhF --time-style=long-iso --git'
-alias la='exa -lhHigUmuSa --time-style=long-iso --git --color-scale'
-alias tree='exa --tree --level=2'
-
 # npm
 alias ti="tnpm i"
 alias tid="tnpm i -D"
@@ -112,11 +105,6 @@ alias jitouch="killall Jitouch; open $HOME/Library/PreferencePanes/Jitouch.prefP
 alias show-hidden="chflags nohidden"
 alias hide-hidden="chflags hidden"
 
-# Private
-if [ -f "$HOME/.zshrc-private" ]; then
-  source "$HOME/.zshrc-private"
-fi
-
 # oh-my-zsh config
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -137,3 +125,15 @@ AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
+
+# exa
+alias ls="exa"
+alias l="exa -lF --time-style=long-iso"
+alias ll="exa -lhF --time-style=long-iso --git"
+alias la="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
+alias tree="exa --tree --level=2"
+
+# Private
+if [ -f "$HOME/.zshrc-private" ]; then
+  source "$HOME/.zshrc-private"
+fi'
