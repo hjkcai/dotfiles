@@ -13,25 +13,50 @@ fi
 alias zl="z -l"
 alias zc="z -c"
 
+# exa
+alias ls='exa'
+alias l='exa -lF --time-style=long-iso'
+alias ll='exa -lhF --time-style=long-iso --git'
+alias la='exa -lhHigUmuSa --time-style=long-iso --git --color-scale'
+alias tree='exa --tree --level=2'
+
 # npm
 alias ti="tnpm i"
 alias tid="tnpm i -D"
+alias tig="tnpm i -g"
 alias tr="tnpm run"
 alias tp="tnpm publish"
 alias tu="tnpm uninstall"
 alias trb="tnpm run build"
 alias trd="tnpm run dev"
+alias trl="tnpm run lint"
+alias trlf="tnpm run lint -- --fix"
 alias trt="tnpm run test"
-alias ni="npm i"
-alias nid="npm i -D"
-alias nr="npm run"
-alias np="npm publish"
-alias nu="npm uninstall"
-alias nrb="npm run build"
-alias nrd="npm run dev"
-alias nrt="npm run test"
+alias trtc="tnpm run test -- --coverage"
+alias trtw="tnpm run test -- --watch"
+
+alias ni="tnpm i"
+alias nid="tnpm i -D"
+alias nig="tnpm i -g"
+alias nr="tnpm run"
+alias np="tnpm publish"
+alias nu="tnpm uninstall"
+alias nrb="tnpm run build"
+alias nrd="tnpm run dev"
+alias nrl="tnpm run lint"
+alias nrlf="tnpm run lint -- --fix"
+alias nrt="tnpm run test"
+alias nrtc="tnpm run test -- --coverage"
+alias nrtw="tnpm run test -- --watch"
+
 alias npmc="npm --registry=https://registry.npm.taobao.org"
 alias yarnc="yarn --registry=https://registry.npm.taobao.org"
+
+function npm-link() {
+  module="./node_modules/$1"
+  rm -r $module
+  ln -s $2 $module
+}
 
 # TypeScript
 alias tscp="tsc -p ."
@@ -82,6 +107,7 @@ alias clash-proxy="export http_proxy=http://127.0.0.1:7890 && export https_proxy
 
 # Other
 export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias jitouch="killall Jitouch; open $HOME/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app"
 alias show-hidden="chflags nohidden"
 alias hide-hidden="chflags hidden"
@@ -111,5 +137,3 @@ AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
-
-hash -d Projects=$HOME/Projects
