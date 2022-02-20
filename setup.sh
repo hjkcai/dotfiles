@@ -45,8 +45,8 @@ if type "pacman" > /dev/null; then
   sudo systemctl start docker
 
   # yay
-  section "Installing yay..."
   if ! type "yay" > /dev/null; then
+    section "Installing yay..."
     TEMP_DIR=`mktemp`
     git clone https://aur.archlinux.org/yay.git $TEMP_DIR
     pushd $TEMP_DIR
@@ -56,8 +56,8 @@ if type "pacman" > /dev/null; then
   fi
 
   # ananicy
-  section "Installing ananicy..."
   if ! type "ananicy" > /dev/null; then
+    section "Installing ananicy..."
     TEMP_DIR=`mktemp`
     git clone https://aur.archlinux.org/ananicy-git.git $TEMP_DIR
     pushd $TEMP_DIR
@@ -108,7 +108,7 @@ if ! [ -d ~/.n ]; then
 fi
 
 # Node packages
-section "Installing common Node.js packages"
+section "Installing common Node.js packages..."
 npm install -g \
   concurrently create-react-app @feflow/cli http-server lerna \
   npm-check-update nodemon pm2 ts-node typescript whistle yarn
