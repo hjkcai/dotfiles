@@ -1,16 +1,16 @@
 # Setup script for new machines
 
 # oh-my-zsh
-RUNZSH=no sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUNZSH=no sh -c "$(curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 ZSH_CUSTOM=~/.oh-my-zsh/custom
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-curl https://raw.githubusercontent.com/hjkcai/dotfiles/master/zshrc > $HOME/.zshrc
+git clone https://hub.fastgit.xyz/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://hub.fastgit.xyz/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+curl https://raw.fastgit.org/hjkcai/dotfiles/master/zshrc > $HOME/.zshrc
 
 # agkozak zsh theme
 [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
-git clone https://github.com/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
+git clone https://hub.fastgit.xyz/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
 ln -s $ZSH_CUSTOM/themes/agkozak/agkozak-zsh-prompt.plugin.zsh $ZSH_CUSTOM/themes/agkozak.zsh-theme
 
 # Node.js
