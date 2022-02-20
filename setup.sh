@@ -21,7 +21,7 @@ read GIT_EMAIL
 
 # Locale & Timezone
 section "Setting locale and timezone..."
-sudo echo "en_US.UTF-8" > /etc/locale.gen
+sudo bash -c "echo 'en_US.UTF-8' > /etc/locale.gen"
 sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
 sudo timedatectl set-timezone Asia/Shanghai
@@ -40,7 +40,7 @@ if type "pacman" > /dev/null; then
 
   # Docker
   section "Enabling Docker..."
-  sudo echo '{"registry-mirrors": ["https://docker.mirrors.ustc.edu.cn/"]}' > /etc/docker/daemon.json
+  sudo bash -c "echo '{\"registry-mirrors\": [\"https://docker.mirrors.ustc.edu.cn/\"]}' > /etc/docker/daemon.json"
   sudo systemctl enable docker
   sudo systemctl start docker
 
