@@ -115,4 +115,4 @@ AGKOZAK_FORCE_ASYNC_METHOD=none
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
   source "$HOME/.zshrc-private"
-fi'
+fi
