@@ -4,6 +4,10 @@ function section {
   echo -e "\033[0;31m${1}\033[0m"
 }
 
+function hasCommand {
+  return type $1 > /dev/null 2>&1
+}
+
 # Hostname
 section "Please enter your new HOSTNAME (Currently '$HOSTNAME'). Leave it empty to skip."
 echo -n "HOSTNAME: "
@@ -21,20 +25,20 @@ read GIT_EMAIL
 
 # Locale & Timezone
 section "Setting locale and timezone..."
-sudo bash -c "echo 'en_US.UTF-8' > /etc/locale.gen"
+sudo bash -c "echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen"
 sudo locale-gen
 sudo localectl set-locale LANG=en_US.UTF-8
 sudo timedatectl set-timezone Asia/Shanghai
 
 # Arch Linux
-if type "pacman" > /dev/null; then
+if hasCommand "pacman"; then
   # China mirror
   section "Switching to pacman China mirror..."
   sudo reflector -l 5 -c China -p https --sort rate --save /etc/pacman.d/mirrorlist
 
   # Recommended packages
   section "Installing basic packages..."
-  pacman -Sy --noconfirm --needed \
+  sudo pacman -Sy --noconfirm --needed \
     git base-devel man wget exa broot htop zsh docker docker-compose \
     ncdu unzip neofetch vim rsync nmap net-tools man-db lsof
 
@@ -45,7 +49,7 @@ if type "pacman" > /dev/null; then
   sudo systemctl start docker
 
   # yay
-  if ! type "yay" > /dev/null; then
+  if ! hasCommand "yay"; then
     section "Installing yay..."
     TEMP_DIR=`mktemp`
     git clone https://aur.archlinux.org/yay.git $TEMP_DIR
@@ -56,7 +60,7 @@ if type "pacman" > /dev/null; then
   fi
 
   # ananicy
-  if ! type "ananicy" > /dev/null; then
+  if ! hasCommand "ananicy"; then
     section "Installing ananicy..."
     TEMP_DIR=`mktemp`
     git clone https://aur.archlinux.org/ananicy-git.git $TEMP_DIR
