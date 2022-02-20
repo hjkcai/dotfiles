@@ -1,7 +1,7 @@
 # Setup script for new machines
 
 # Hostname
-echo "Please enter your new HOSTNAME (Currently $HOSTNAME). Leave it empty to skip."
+echo "Please enter your new HOSTNAME (Currently '$HOSTNAME'). Leave it empty to skip."
 echo -n "HOSTNAME: "
 read NEW_HOSTNAME
 if ! [ -z "$NEW_HOSTNAME" ]; then
