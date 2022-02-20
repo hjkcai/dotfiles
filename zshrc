@@ -13,21 +13,14 @@ fi
 alias zl="z -l"
 alias zc="z -c"
 
-# npm
-alias ti="tnpm i"
-alias tid="tnpm i -D"
-alias tig="tnpm i -g"
-alias tr="tnpm run"
-alias tp="tnpm publish"
-alias tu="tnpm uninstall"
-alias trb="tnpm run build"
-alias trd="tnpm run dev"
-alias trl="tnpm run lint"
-alias trlf="tnpm run lint -- --fix"
-alias trt="tnpm run test"
-alias trtc="tnpm run test -- --coverage"
-alias trtw="tnpm run test -- --watch"
+# exa
+alias ls="exa"
+alias l="exa -lF --time-style=long-iso"
+alias ll="exa -lhF --time-style=long-iso --git"
+alias la="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
+alias tree="exa --tree --level=2"
 
+# npm
 alias ni="tnpm i"
 alias nid="tnpm i -D"
 alias nig="tnpm i -g"
@@ -65,15 +58,6 @@ alias adb-paste="adb shell am broadcast -a clipper.get"
 alias adb-copy="adb shell am broadcast -a clipper.set -e text"
 alias adb-kill="adb shell am force-stop"
 
-# YYB
-function tmast-webview() {
-  encodedUrl=$(node -e "console.log(decodeURIComponent('$1'))")
-  adb-deeplink "tmast://webview?url=$encodedUrl"
-}
-
-# Chrome Canary with debug proxy enabled
-alias canary="open /Applications/Google\ Chrome\ Canary.app --args --proxy-server=http://127.0.0.1:8888"
-
 # Haskell Stack
 if type "stack" > /dev/null; then
   alias sr="stack run"
@@ -98,19 +82,21 @@ alias ioa-proxy="export http_proxy=http://127.0.0.1:12639 && export https_proxy=
 alias ss-proxy="export http_proxy=http://127.0.0.1:1080 && export https_proxy=http://127.0.0.1:1080"
 alias clash-proxy="export http_proxy=http://127.0.0.1:7890 && export https_proxy=http://127.0.0.1:7890"
 
-# Other
-export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
-alias ports-usage="lsof -i -P -sTCP:LISTEN"
+# MacOS
 alias jitouch="killall Jitouch; open $HOME/Library/PreferencePanes/Jitouch.prefPane/Contents/Resources/Jitouch.app"
 alias show-hidden="chflags nohidden"
 alias hide-hidden="chflags hidden"
+
+# Other
+export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+alias ports-usage="lsof -i -P -sTCP:LISTEN"
 
 # oh-my-zsh config
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm osx extract z zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -125,13 +111,6 @@ AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
-
-# exa
-alias ls="exa"
-alias l="exa -lF --time-style=long-iso"
-alias ll="exa -lhF --time-style=long-iso --git"
-alias la="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
-alias tree="exa --tree --level=2"
 
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
