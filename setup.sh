@@ -12,6 +12,7 @@ function hasCommand {
 # Checks
 if [ "$USER" = "root" ]; then
   echo "You cannot run this script as root. Remember to install sudo firstly."
+  exit 1
 fi
 
 # Hostname
