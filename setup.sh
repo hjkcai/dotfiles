@@ -129,7 +129,7 @@ fi
 section "Installing common Node.js packages..."
 $HOME/.n/bin/npm install -g \
   concurrently create-react-app @feflow/cli http-server lerna \
-  npm-check-update nodemon pm2 ts-node typescript whistle yarn
+  npm-check-updates nodemon pm2 ts-node typescript whistle yarn
 
 section "Enjoy!"
 neofetch
