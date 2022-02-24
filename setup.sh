@@ -9,6 +9,11 @@ function hasCommand {
   return $?
 }
 
+# Checks
+if [ "$USER" = "root" ]; then
+  echo "You cannot run this script as root. Remember to install sudo firstly."
+fi
+
 # Hostname
 section "Please enter your new HOSTNAME (Currently '$HOSTNAME'). Leave it empty to skip."
 echo -n "HOSTNAME: "
@@ -45,6 +50,7 @@ if hasCommand "pacman"; then
 
   # Docker
   section "Enabling Docker..."
+  sudo mkdir -p /etc/docker
   sudo bash -c "echo '{\"registry-mirrors\": [\"https://docker.mirrors.ustc.edu.cn/\"]}' > /etc/docker/daemon.json"
   sudo systemctl enable docker
   sudo systemctl start docker
@@ -84,6 +90,7 @@ git config --global credential.helper store
 # oh-my-zsh
 if ! [ -d $HOME/.oh-my-zsh ]; then
   section "Installing oh-my-zsh..."
+  sudo chsh -s /usr/bin/zsh $USER
   curl -fsSL https://raw.fastgit.org/ohmyzsh/ohmyzsh/master/tools/install.sh > /tmp/oh-my-zsh
   sed -i 's/github.com/hub.fastgit.xyz/g' /tmp/oh-my-zsh
   RUNZSH=no bash /tmp/oh-my-zsh
@@ -114,12 +121,12 @@ if ! [ -d $HOME/.n ]; then
   bash /tmp/n-install -n -y latest
 
   section "Setting npm registry..."
-  npm config set registry ${NPM_REGISTRY:-https://registry.npm.taobao.org}
+  $HOME/.n/npm config set registry ${NPM_REGISTRY:-https://registry.npm.taobao.org}
 fi
 
 # Node packages
 section "Installing common Node.js packages..."
-npm install -g \
+$HOME/.n/bin/npm install -g \
   concurrently create-react-app @feflow/cli http-server lerna \
   npm-check-update nodemon pm2 ts-node typescript whistle yarn
 
