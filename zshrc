@@ -9,6 +9,27 @@ if [ -d "$HOME/.n" ]; then
   export PATH=$HOME/.config/yarn/global/node_modules/.bin:$N_PREFIX/bin:$PATH
 fi
 
+# oh-my-zsh config
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="agkozak"
+DISABLE_AUTO_UPDATE="true"
+plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions)
+
+source $ZSH/oh-my-zsh.sh
+
+# Customization for the theme agkozak
+AGKOZAK_CUSTOM_PROMPT=$'%(!.%S%B.%B%F{green})%n%1v%(!.%b%s.%f%b) '
+AGKOZAK_CUSTOM_PROMPT+='%B%F{blue}%2v%f%b'
+AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{243}%3v%f.)\n'
+AGKOZAK_CUSTOM_PROMPT+='%(4V.:.%(!.#.$)) '
+AGKOZAK_CUSTOM_RPROMPT=$'%{\e[1A%}%(?..%B%F{red}(%?%)%f%b )%F{243}%*%f%{\e[1B%}'
+
+AGKOZAK_PROMPT_DIRTRIM=4
+AGKOZAK_BLANK_LINES=1
+AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
+AGKOZAK_FORCE_ASYNC_METHOD=none
+
 # z
 alias zl="z -l"
 alias zc="z -c"
@@ -90,27 +111,6 @@ alias hide-hidden="chflags hidden"
 # Other
 export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
-
-# oh-my-zsh config
-export ZSH="$HOME/.oh-my-zsh"
-
-ZSH_THEME="agkozak"
-DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions)
-
-source $ZSH/oh-my-zsh.sh
-
-# Customization for the theme agkozak
-AGKOZAK_CUSTOM_PROMPT=$'%(!.%S%B.%B%F{green})%n%1v%(!.%b%s.%f%b) '
-AGKOZAK_CUSTOM_PROMPT+='%B%F{blue}%2v%f%b'
-AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{243}%3v%f.)\n'
-AGKOZAK_CUSTOM_PROMPT+='%(4V.:.%(!.#.$)) '
-AGKOZAK_CUSTOM_RPROMPT=$'%{\e[1A%}%(?..%B%F{red}(%?%)%f%b )%F{243}%*%f%{\e[1B%}'
-
-AGKOZAK_PROMPT_DIRTRIM=4
-AGKOZAK_BLANK_LINES=1
-AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
-AGKOZAK_FORCE_ASYNC_METHOD=none
 
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
