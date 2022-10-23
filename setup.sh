@@ -57,7 +57,7 @@ if hasCommand "pacman"; then
   section "Installing basic packages..."
   sudo pacman -Sy --noconfirm --needed \
     git base-devel man wget exa broot htop zsh docker docker-compose \
-    ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr
+    ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie
 
   # Docker
   section "Enabling Docker..."
