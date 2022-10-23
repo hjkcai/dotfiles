@@ -57,7 +57,7 @@ if hasCommand "pacman"; then
   section "Installing basic packages..."
   sudo pacman -Sy --noconfirm --needed \
     git base-devel man wget exa broot htop zsh docker docker-compose \
-    ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie
+    ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie cronie
 
   # Docker
   section "Enabling Docker..."
@@ -68,6 +68,11 @@ if hasCommand "pacman"; then
 
   sudo systemctl enable docker
   sudo systemctl start docker
+
+  # Cronie
+  section "Enabling Cronie..."
+  sudo systemctl enable cronie
+  sudo systemctl start cronie
 
   # yay
   if ! hasCommand "yay"; then
