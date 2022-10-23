@@ -109,8 +109,12 @@ alias show-hidden="chflags nohidden"
 alias hide-hidden="chflags hidden"
 
 # Other
-export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
+alias hs="http-server"
+
+if [ "$CHINA_MAINLAND" != '0' ]; then
+  export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+fi
 
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
