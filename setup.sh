@@ -61,7 +61,7 @@ if hasCommand "pacman"; then
 
   # Recommended packages
   section "Installing basic packages..."
-  sudo pacman -y --noconfirm --needed \
+  sudo pacman -S --noconfirm --needed \
     git base-devel man wget exa broot htop zsh docker docker-compose \
     ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie cronie
 
