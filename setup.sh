@@ -81,7 +81,8 @@ if hasCommand "pacman"; then
     git clone https://aur.archlinux.org/yay-bin.git $TEMP_DIR
     pushd $TEMP_DIR
       if [ "$CHINA_MAINLAND" != '0' ]; then
-        sed -i 's/github.com/download.fastgit.org/g' PKGBUILD
+        # Not available 20221106
+        # sed -i 's/github.com/download.fastgit.org/g' PKGBUILD
       fi
       makepkg -si --noconfirm
     popd
