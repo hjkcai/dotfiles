@@ -10,11 +10,11 @@ function hasCommand {
 }
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  GITHUB=github.com
-  GITHUB_RAW=raw.githubusercontent.com
-else
   GITHUB=hub.fastgit.xyz
   GITHUB_RAW=raw.fastgit.org
+else
+  GITHUB=github.com
+  GITHUB_RAW=raw.githubusercontent.com
 fi
 
 # Checks
