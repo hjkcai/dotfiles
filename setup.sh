@@ -10,8 +10,8 @@ function hasCommand {
 }
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  GITHUB=hub.fastgit.xyz
-  GITHUB_RAW=raw.fastgit.org
+  GITHUB=ghproxy.com/https://github.com
+  GITHUB_RAW=ghproxy.com/https://raw.githubusercontent.com
 else
   GITHUB=github.com
   GITHUB_RAW=raw.githubusercontent.com
@@ -81,8 +81,7 @@ if hasCommand "pacman"; then
     git clone https://aur.archlinux.org/yay-bin.git $TEMP_DIR
     pushd $TEMP_DIR
       if [ "$CHINA_MAINLAND" != '0' ]; then
-        # Not available 20221106
-        # sed -i 's/github.com/download.fastgit.org/g' PKGBUILD
+        sed -i "s|github.com|$GITHUB|g" PKGBUILD
       fi
       makepkg -si --noconfirm
     popd
@@ -95,7 +94,7 @@ if hasCommand "pacman"; then
     git clone https://aur.archlinux.org/ananicy-git.git $TEMP_DIR
     pushd $TEMP_DIR
       if [ "$CHINA_MAINLAND" != '0' ]; then
-        sed -i 's/git+https\:\/\/github.com/git+https\:\/\/hub.fastgit.xyz/' PKGBUILD
+        sed -i "s|git+https\\://github.com|git+https\://$GITHUB|" PKGBUILD
       fi
       makepkg -si --noconfirm
       sudo systemctl enable ananicy
@@ -117,7 +116,7 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   sudo chsh -s /usr/bin/zsh $USER
   curl -fsSL https://$GITHUB_RAW/ohmyzsh/ohmyzsh/master/tools/install.sh > /tmp/oh-my-zsh
   if [ "$CHINA_MAINLAND" != '0' ]; then
-    sed -i 's/github.com/hub.fastgit.xyz/g' /tmp/oh-my-zsh
+    sed -i "s|github.com|$GITHUB|g" /tmp/oh-my-zsh
   fi
   RUNZSH=no bash /tmp/oh-my-zsh
 
@@ -145,23 +144,23 @@ if ! [ -d $HOME/.n ]; then
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
     export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
-    sed -i 's/github.com/hub.fastgit.xyz/g' /tmp/n-install
-    sed -i 's/raw.githubusercontent.com/raw.fastgit.org/g' /tmp/n-install
+    sed -i "s|https\://github.com|https\://$GITHUB|g" /tmp/n-install
   fi
 
-  bash /tmp/n-install -n -y latest
+  bash /tmp/n-install -n -y lts
+  export PATH=$PATH:$N_PREFIX/bin
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
     section "Setting npm registry..."
-    $HOME/.n/npm config set registry ${NPM_REGISTRY:-https://registry.npm.taobao.org}
+    npm config set registry ${NPM_REGISTRY:-https://registry.npm.taobao.org}
   fi
 fi
 
 # Node packages
 section "Installing common Node.js packages..."
-$HOME/.n/bin/npm install -g \
-  concurrently create-react-app @feflow/cli http-server lerna \
-  npm-check-updates nodemon pm2 ts-node typescript whistle yarn pnpm esno
+npm install -g \
+  concurrently create-react-app http-server lerna \
+  npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno
 
 section "Enjoy!"
 neofetch
