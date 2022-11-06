@@ -52,10 +52,16 @@ if hasCommand "pacman"; then
     section "Switching to pacman China mirror..."
     sudo reflector -l 5 -c China -p https --sort rate --save /etc/pacman.d/mirrorlist
   fi
+  
+  # Keyring
+  section "Initializing Keyring..."
+  sudo pacman-key --init
+  sudo pacman-key --populate archlinux
+  sudo sudo pacman -Sy --noconfirm archlinux-keyring
 
   # Recommended packages
   section "Installing basic packages..."
-  sudo pacman -Sy --noconfirm --needed \
+  sudo pacman -y --noconfirm --needed \
     git base-devel man wget exa broot htop zsh docker docker-compose \
     ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie cronie
 
