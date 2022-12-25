@@ -30,6 +30,9 @@ AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
 
+# sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+alias sudo="sudo "
+
 # z
 alias zl="z -l"
 alias zc="z -c"
