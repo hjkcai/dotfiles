@@ -52,7 +52,7 @@ if hasCommand "pacman"; then
     section "Switching to pacman China mirror..."
     sudo reflector -l 5 -c China -p https --sort rate --save /etc/pacman.d/mirrorlist
   fi
-  
+
   # Keyring
   section "Initializing Keyring..."
   sudo pacman-key --init
@@ -97,7 +97,7 @@ if hasCommand "pacman"; then
   if ! hasCommand "ananicy"; then
     section "Installing ananicy..."
     TEMP_DIR=`mktemp -u`
-    git clone https://aur.archlinux.org/ananicy-git.git $TEMP_DIR
+    git clone https://aur.archlinux.org/minq-ananicy-git.git $TEMP_DIR
     pushd $TEMP_DIR
       if [ "$CHINA_MAINLAND" != '0' ]; then
         sed -i "s|git+https\\://github.com|git+https\://$GITHUB|" PKGBUILD
@@ -130,6 +130,14 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
   git clone https://$GITHUB/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
   git clone https://$GITHUB/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+  git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin.git
+
+  # fzf
+  git clone --depth 1 https://$GITHUB/junegunn/fzf.git $HOME/.fzf
+  if [ "$CHINA_MAINLAND" != '0' ]; then
+    sed -i "s|github.com|$GITHUB|g" $HOME/.fzf/install
+  fi
+  $HOME/.fzf/install --bin
 
   # agkozak zsh theme
   [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
@@ -149,7 +157,7 @@ if ! [ -d $HOME/.n ]; then
   curl -L https://$GITHUB_RAW/mklement0/n-install/stable/bin/n-install > /tmp/n-install
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
-    export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+    export N_NODE_MIRROR=https://registry.npmmirror.com/mirrors/node
     sed -i "s|https\://github.com|https\://$GITHUB|g" /tmp/n-install
   fi
 
@@ -158,7 +166,7 @@ if ! [ -d $HOME/.n ]; then
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
     section "Setting npm registry..."
-    npm config set registry ${NPM_REGISTRY:-https://registry.npm.taobao.org}
+    npm config set registry ${NPM_REGISTRY:-https://registry.npmmirror.com}
   fi
 fi
 

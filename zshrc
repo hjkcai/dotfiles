@@ -14,8 +14,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions)
-
+plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions fzf-zsh-plugin)
 source $ZSH/oh-my-zsh.sh
 
 # Customization for the theme agkozak
@@ -30,8 +29,10 @@ AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
 
-# sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
-alias sudo="sudo "
+# broot
+if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
+  source $HOME/.config/broot/launcher/bash/br
+fi
 
 # z
 alias zl="z -l"
@@ -45,6 +46,9 @@ alias la="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
 alias tree="exa --tree --level=2"
 
 # npm
+alias npmc="npm --registry=https://registry.npmmirror.com"
+alias yarnc="yarn --registry=https://registry.npmmirror.com"
+
 alias ni="npm i"
 alias nid="npm i -D"
 alias nig="npm i -g"
@@ -59,8 +63,11 @@ alias nrt="npm run test"
 alias nrtc="npm run test -- --coverage"
 alias nrtw="npm run test -- --watch"
 
-alias npmc="npm --registry=https://registry.npm.taobao.org"
-alias yarnc="yarn --registry=https://registry.npm.taobao.org"
+alias pi="pnpm i"
+alias pid="pnpm i -D"
+alias pig="pnpm i -g"
+alias piw="pnpm i -w"
+alias piwd="pnpm i -w -D"
 
 function npm-link() {
   module="./node_modules/$1"
@@ -73,6 +80,13 @@ alias tscp="tsc -p ."
 alias tscpw="tsc -p . -w"
 alias tscpp="tsc -p tsconfig.prod.json"
 alias tscppw="tsc -p tsconfig.prod.json -w"
+
+# Jest
+alias jest="npx jest"
+alias jestb="npx jest --runInBand"
+alias jestc="npx jest --coverage"
+alias jestp="npx jest --testPathPattern"
+alias jestbp="npx jest --runInBand --testPathPattern"
 
 # adb
 alias adb-scr="adb exec-out screencap -p"
@@ -114,6 +128,7 @@ alias hide-hidden="chflags hidden"
 # Other
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias hs="http-server"
+alias sudo="sudo " # sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
   export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
