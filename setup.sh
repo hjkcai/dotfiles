@@ -130,7 +130,7 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
   git clone https://$GITHUB/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
   git clone https://$GITHUB/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-  git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin.git
+  git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
 
   # fzf
   git clone --depth 1 https://$GITHUB/junegunn/fzf.git $HOME/.fzf
