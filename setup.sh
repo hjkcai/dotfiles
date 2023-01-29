@@ -155,7 +155,7 @@ section "Installing broot..."
 if hasCommand "broot"; then
   zsh -c 'broot --install'
   curl https://$GITHUB_RAW/kreigor/broot-nord-theme/main/broot.skin > $HOME/.config/broot/nord.toml
-  sed -i "s|dark-blur-skin.hjson|nord.toml" $HOME/.config/broot/config.hjson
+  sed -i "s|dark-blur-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
 fi
 
 # zsh config
