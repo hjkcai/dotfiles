@@ -132,6 +132,7 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
 
   section "Installing oh-my-zsh plugins..."
   ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
+  git clone https://$GITHUB/jeffreytse/zsh-vi-mode $ZSH_CUSTOM/plugins/zsh-vi-mode
   git clone https://$GITHUB/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
   git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CUSTOM/plugins/fast-syntax-highlighting
   git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
@@ -155,7 +156,7 @@ section "Installing broot..."
 if hasCommand "broot"; then
   zsh -c 'broot --install'
   curl https://$GITHUB_RAW/kreigor/broot-nord-theme/main/broot.skin > $HOME/.config/broot/nord.toml
-  sed -i "s|dark-blur-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
+  sed -i "s|dark-blue-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
 fi
 
 # zsh config
@@ -167,6 +168,13 @@ curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
 section "Installing tmux config..."
 mkdir -p $HOME/.config/tmux
 curl https://$GITHUB_RAW/hjkcai/dotfiles/master/tmux.conf > $HOME/.config/tmux/tmux.conf
+if [ "$CHINA_MAINLAND" != '0' ]; then
+  sed -i "s|https\://github.com|https\://$GITHUB|g" $HOME/.config/tmux/tmux.conf
+fi
+if ! [ -d $HOME/.tmux/plugins/tpm ]; then
+  git clone https://$GITHUB/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+fi
+$HOME/.tmux/plugins/tpm/bin/install_plugins
 
 # Node.js
 if ! [ -d $HOME/.n ]; then

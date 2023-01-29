@@ -11,11 +11,25 @@ if [ -d "$HOME/.n" ]; then
   fi
 fi
 
+# zsh-vi-mode
+function zvm_config() {
+  ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_ZLE
+  ZVM_KEYTIMEOUT=0.01
+  ZVM_ESCAPE_KEYTIMEOUT=0.01
+}
+
+function zvm_after_init() {
+  # Fix key conflicts
+  bindkey '^[[A' up-line-or-search
+  bindkey '^[[B' down-line-or-search
+  source $ZSH_CUSTOM/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
+}
+
 # oh-my-zsh config
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract z fast-syntax-highlighting zsh-autosuggestions fzf-zsh-plugin fzf-tab)
+plugins=(git sudo node npm macos extract z zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab)
 source $ZSH/oh-my-zsh.sh
 
 # Customization for the theme agkozak
@@ -37,7 +51,7 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 
 # bat
 export BAT_THEME=Nord
-alias cat="bat -p"
+alias cat="bat -pp"
 
 # broot
 if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
@@ -139,14 +153,13 @@ alias hide-hidden="chflags hidden"
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias hs="http-server"
 alias sudo="sudo " # sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
-alias env="/usr/bin/env -0 | sort -z | tr '\0' '\n' | sd '(^|\n)([A-Za-z0-9_]+)=' $(printf '$1\\033[1;32m$2\\033[0m=')"
+alias env="/usr/bin/env -0 | sort -z | tr '\0' '\n' | sd '(^|\n)([A-Za-z0-9_]+)=' \$(printf '\$1\033[1;32m\$2\033[0m=')"
 function tm() {
   tmux new-session -A -s ${1:-main}
 }
 
 # Ctrl-L clears buffer
-# ~/.zshrc
-clear-scrollback-and-screen () {
+function clear-scrollback-and-screen() {
   echo -n -e '\e[2J\e[3J\e[1;1H'
   zle clear-screen
   tmux clear-history 2>/dev/null || true
