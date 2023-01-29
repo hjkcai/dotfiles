@@ -4,10 +4,14 @@ The nice dotfiles and setup scripts for me
 
 Use the following script to install:
 
-```bash
-# China Mainland
-bash -c "$(curl -fsSL https://raw.fastgit.org/hjkcai/dotfiles/master/setup.sh)" && exec zsh
+### China Mainland
 
-# Otherwise
+```bash
+bash -c "$(curl -fsSL https://raw.fastgit.org/hjkcai/dotfiles/master/setup.sh)" && exec zsh
+```
+
+### Otherwise
+
+```
 CHINA_MAINLAND=0 bash -c "$(curl -fsSL https://raw.githubusercontent.com/hjkcai/dotfiles/master/setup.sh)" && exec zsh
 ```
