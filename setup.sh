@@ -161,7 +161,8 @@ fi
 
 # zsh config
 section "Installing zsh config..."
-echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}\n" > $HOME/.zshrc
+echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}" > $HOME/.zshrc
+echo "" > $HOME/.zshrc
 curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
 
 # tmux config
