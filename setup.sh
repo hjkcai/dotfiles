@@ -62,7 +62,7 @@ if hasCommand "pacman"; then
   # Recommended packages
   section "Installing basic packages..."
   sudo pacman -S --noconfirm --needed \
-    git base-devel man wget exa broot htop zsh docker docker-compose \
+    git base-devel man wget exa broot htop zsh docker docker-compose tmux neovim bat duf \
     ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie cronie fd sd p7zip
 
   # Docker
@@ -128,9 +128,10 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
 
   section "Installing oh-my-zsh plugins..."
   ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
-  git clone https://$GITHUB/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
   git clone https://$GITHUB/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+  git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CUSTOM/plugins/fast-syntax-highlighting
   git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
+  git clone https://$GITHUB/Aloxaf/fzf-tab.git $ZSH_CUSTOM/plugins/fzf-tab
 
   # fzf
   git clone --depth 1 https://$GITHUB/junegunn/fzf.git $HOME/.fzf
@@ -149,6 +150,11 @@ fi
 section "Installing zsh config..."
 echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}\n" > $HOME/.zshrc
 curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
+
+# tmux config
+section "Installing tmux config..."
+mkdir -p $HOME/.config/tmux
+curl https://$GITHUB_RAW/hjkcai/dotfiles/master/tmux.conf > $HOME/.config/tmux/tmux.conf
 
 # Node.js
 if ! [ -d $HOME/.n ]; then

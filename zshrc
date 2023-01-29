@@ -4,17 +4,18 @@ export PATH=$HOME/.local/bin:$HOME/.bin:$PATH
 # Node.js related
 if [ -d "$HOME/.n" ]; then
   export N_PREFIX=$HOME/.n
+  export PATH=$N_PREFIX/bin:$PATH
 
-  # Assuming yarn is installed in the default location if Node.js is installed
-  export PATH=$HOME/.config/yarn/global/node_modules/.bin:$N_PREFIX/bin:$PATH
+  if [ "$CHINA_MAINLAND" != '0' ]; then
+    export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+  fi
 fi
 
 # oh-my-zsh config
 export ZSH="$HOME/.oh-my-zsh"
-
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract z zsh-syntax-highlighting zsh-autosuggestions fzf-zsh-plugin)
+plugins=(git sudo node npm macos extract z fast-syntax-highlighting zsh-autosuggestions fzf-zsh-plugin fzf-tab)
 source $ZSH/oh-my-zsh.sh
 
 # Customization for the theme agkozak
@@ -28,6 +29,11 @@ AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
+
+# fzf Nord theme
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+  --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
+  --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
 
 # broot
 if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
@@ -129,10 +135,20 @@ alias hide-hidden="chflags hidden"
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias hs="http-server"
 alias sudo="sudo " # sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+alias env="/usr/bin/env -0 | sort -z | tr '\0' '\n' | sd '(^|\n)([A-Za-z0-9_]+)=' $(printf '$1\\033[1;32m$2\\033[0m=')"
+function tm() {
+  tmux new-session -A -s ${1:-main}
+}
 
-if [ "$CHINA_MAINLAND" != '0' ]; then
-  export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
-fi
+# Ctrl-L clears buffer
+# ~/.zshrc
+clear-scrollback-and-screen () {
+  echo -n -e '\e[2J\e[3J\e[1;1H'
+  zle clear-screen
+  tmux clear-history 2>/dev/null || true
+}
+zle -N clear-scrollback-and-screen
+bindkey -v '^L' clear-scrollback-and-screen
 
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
