@@ -32,7 +32,7 @@ if ! [ -z "$NEW_HOSTNAME" ]; then
 fi
 
 # Git (Ask first)
-section "Please enter your default Git information."
+section "Please enter your default Git information. Leave it empty to skip."
 echo -n 'Username: '
 read GIT_NAME
 if ! [ -z "$GIT_NAME" ]; then
