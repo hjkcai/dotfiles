@@ -12,6 +12,6 @@ bash -c "$(curl -fsSL https://raw.fastgit.org/hjkcai/dotfiles/master/setup.sh)" 
 
 ### Otherwise
 
-```
+```bash
 CHINA_MAINLAND=0 bash -c "$(curl -fsSL https://raw.githubusercontent.com/hjkcai/dotfiles/master/setup.sh)" && exec zsh
 ```
