@@ -35,8 +35,10 @@ fi
 section "Please enter your default Git information."
 echo -n 'Username: '
 read GIT_NAME
-echo -n 'Email: '
-read GIT_EMAIL
+if ! [ -z "$GIT_NAME" ]; then
+  echo -n 'Email: '
+  read GIT_EMAIL
+fi
 
 # Locale & Timezone
 section "Setting locale and timezone..."
@@ -110,11 +112,13 @@ if hasCommand "pacman"; then
 fi
 
 # Git
-section "Setting up Git..."
-git config --global user.name $GIT_NAME
-git config --global user.email $GIT_EMAIL
-git config --global pull.rebase 'false'
-git config --global credential.helper store
+if ! [ -z "$GIT_NAME" ]; then
+  section "Setting up Git..."
+  git config --global user.name $GIT_NAME
+  git config --global user.email $GIT_EMAIL
+  git config --global pull.rebase 'false'
+  git config --global credential.helper store
+fi
 
 # oh-my-zsh
 if ! [ -d $HOME/.oh-my-zsh ]; then
@@ -144,6 +148,14 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
   git clone https://$GITHUB/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
   ln -s $ZSH_CUSTOM/themes/agkozak/agkozak-zsh-prompt.plugin.zsh $ZSH_CUSTOM/themes/agkozak.zsh-theme
+fi
+
+# broot
+section "Installing broot..."
+if hasCommand "broot"; then
+  zsh -c 'broot --install'
+  curl https://$GITHUB_RAW/kreigor/broot-nord-theme/main/broot.skin > $HOME/.config/broot/nord.toml
+  sed -i "s|dark-blur-skin.hjson|nord.toml" $HOME/.config/broot/config.hjson
 fi
 
 # zsh config
