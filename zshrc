@@ -20,9 +20,16 @@ function zvm_config() {
 
 function zvm_after_init() {
   # Fix key conflicts
-  bindkey '^[[A' up-line-or-search
-  bindkey '^[[B' down-line-or-search
+  bindkey -v '^[[A' up-line-or-search
+  bindkey -v '^[[B' down-line-or-search
+  bindkey -v '^[OA' up-line-or-beginning-search
+  bindkey -v '^[OB' down-line-or-beginning-search
+
+  # fzf & Nord theme
   source $ZSH_CUSTOM/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+    --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
+    --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
 }
 
 # oh-my-zsh config
@@ -43,11 +50,6 @@ AGKOZAK_PROMPT_DIRTRIM=4
 AGKOZAK_BLANK_LINES=1
 AGKOZAK_CUSTOM_SYMBOLS=( '↓↑' '↓' '↑' '+' 'x' '*' '>' '?' 'S')
 AGKOZAK_FORCE_ASYNC_METHOD=none
-
-# fzf Nord theme
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
-  --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
-  --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
 
 # bat
 export BAT_THEME=Nord
