@@ -20,10 +20,8 @@ function zvm_config() {
 
 function zvm_after_init() {
   # Fix key conflicts
-  bindkey -v '^[[A' up-line-or-search
-  bindkey -v '^[[B' down-line-or-search
-  bindkey -v '^[OA' up-line-or-beginning-search
-  bindkey -v '^[OB' down-line-or-beginning-search
+  bindkey -v '^[[A' up-line-or-beginning-search
+  bindkey -v '^[[B' down-line-or-beginning-search
 
   # fzf & Nord theme
   source $ZSH_CUSTOM/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
