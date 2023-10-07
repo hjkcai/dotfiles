@@ -11,11 +11,11 @@ if [ -d "$HOME/.n" ]; then
   fi
 fi
 
-# zsh-vi-mode
+# zsh-vi-mode (zvm)
 function zvm_config() {
   ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_ZLE
-  ZVM_KEYTIMEOUT=0.01
-  ZVM_ESCAPE_KEYTIMEOUT=0.01
+  ZVM_KEYTIMEOUT=0.2
+  ZVM_ESCAPE_KEYTIMEOUT=0.2 # so that EscEsc sudo will work
 }
 
 function zvm_after_init() {
@@ -36,6 +36,9 @@ ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
 plugins=(git sudo node npm macos extract z zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab)
 source $ZSH/oh-my-zsh.sh
+
+# zsh config
+setopt HIST_IGNORE_SPACE
 
 # Customization for the theme agkozak
 AGKOZAK_CUSTOM_PROMPT=$'%(!.%S%B.%B%F{green})%n%1v%(!.%b%s.%f%b) '
