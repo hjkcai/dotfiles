@@ -68,8 +68,10 @@ alias zc="z -c"
 # exa
 alias ls="exa"
 alias l="exa -lF --time-style=long-iso"
+alias la="exa -lF --time-style=long-iso -a"
 alias ll="exa -lhF --time-style=long-iso --git"
-alias la="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
+alias lla="exa -lhF --time-style=long-iso --git -a"
+alias laa="exa -lhHigUmuSa --time-style=long-iso --git --color-scale"
 alias tree="exa --tree --level=2"
 
 # npm
