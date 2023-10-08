@@ -175,9 +175,7 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
   git clone https://$GITHUB/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
   ln -s $ZSH_CUSTOM/themes/agkozak/agkozak-zsh-prompt.plugin.zsh $ZSH_CUSTOM/themes/agkozak.zsh-theme
-elif hasCommand "omz"; then
-  section "Updating oh-my-zsh..."
-  omz update
+  sed -i 's|/tmp/|$PREFIX/tmp/|g' $ZSH_CUSTOM/themes/agkozak.zsh-theme
 fi
 
 # zsh config
@@ -194,11 +192,6 @@ git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CU
 git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
 git clone https://$GITHUB/Aloxaf/fzf-tab.git $ZSH_CUSTOM/plugins/fzf-tab
 git clone https://$GITHUB/agkozak/zsh-z.git $ZSH_CUSTOM/plugins/zsh-z
-git clone https://$GITHUB/Pilaton/OhMyZsh-full-autoupdate.git $ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate
-if hasCommand "omz"; then
-  section "Updating oh-my-zsh plugins..."
-  source $ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate/ohmyzsh-full-autoupdate.plugin.zsh
-fi
 
 # fzf
 if ! hasCommand "fzf"; then
