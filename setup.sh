@@ -139,7 +139,7 @@ if hasCommand "termux-change-repo"; then
   mkdir -p $HOME/.termux
   curl https://$GITHUB_RAW/hjkcai/dotfiles/master/termux.properties > $HOME/.termux/termux.properties
   curl https://$GITHUB/googlefonts/Inconsolata/releases/download/v3.000/Inconsolata-VF.ttf > $HOME/.termux/font.ttf
-  curl https://$GITHUB_RAW/termux/termux-styling/blob/master/app/src/main/assets/colors/nord.properties > $HOME/.termux/colors.properties
+  curl https://$GITHUB_RAW/termux/termux-styling/master/app/src/main/assets/colors/nord.properties > $HOME/.termux/colors.properties
   termux-reload-settings
 fi
 
