@@ -160,12 +160,6 @@ else
   sudo chsh -s /usr/bin/zsh $USER
 fi
 
-# zsh config
-section "Installing zsh config..."
-echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}" > $HOME/.zshrc
-echo "" > $HOME/.zshrc
-curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
-
 # oh-my-zsh
 ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if ! [ -d $HOME/.oh-my-zsh ]; then
@@ -175,7 +169,7 @@ if ! [ -d $HOME/.oh-my-zsh ]; then
   if [ "$CHINA_MAINLAND" != '0' ]; then
     sed -i "s|github.com|$GITHUB|g" $PREFIX/tmp/oh-my-zsh
   fi
-  RUNZSH=no bash $PREFIX/tmp/oh-my-zsh
+  RUNZSH=no CHSH=no bash $PREFIX/tmp/oh-my-zsh
 
   # agkozak zsh theme
   [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
@@ -185,6 +179,12 @@ elif hasCommand "omz"; then
   section "Updating oh-my-zsh..."
   omz update
 fi
+
+# zsh config
+section "Installing zsh config..."
+echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}" > $HOME/.zshrc
+echo "" > $HOME/.zshrc
+curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
 
 # oh-my-zsh plugins
 section "Installing oh-my-zsh plugins..."
