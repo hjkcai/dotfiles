@@ -160,16 +160,22 @@ else
   sudo chsh -s /usr/bin/zsh $USER
 fi
 
+# zsh config
+section "Installing zsh config..."
+echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}" > $HOME/.zshrc
+echo "" > $HOME/.zshrc
+curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
+
 # oh-my-zsh
 ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if ! [ -d $HOME/.oh-my-zsh ]; then
   section "Installing oh-my-zsh..."
 
-  curl -fsSL https://$GITHUB_RAW/ohmyzsh/ohmyzsh/master/tools/install.sh > /tmp/oh-my-zsh
+  curl -fsSL https://$GITHUB_RAW/ohmyzsh/ohmyzsh/master/tools/install.sh > $PREFIX/tmp/oh-my-zsh
   if [ "$CHINA_MAINLAND" != '0' ]; then
-    sed -i "s|github.com|$GITHUB|g" /tmp/oh-my-zsh
+    sed -i "s|github.com|$GITHUB|g" $PREFIX/tmp/oh-my-zsh
   fi
-  RUNZSH=no bash /tmp/oh-my-zsh
+  RUNZSH=no bash $PREFIX/tmp/oh-my-zsh
 
   # agkozak zsh theme
   [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
@@ -212,12 +218,6 @@ if hasCommand "broot"; then
   sed -i "s|dark-blue-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
 fi
 
-# zsh config
-section "Installing zsh config..."
-echo "CHINA_MAINLAND=${CHINA_MAINLAND:-1}" > $HOME/.zshrc
-echo "" > $HOME/.zshrc
-curl https://$GITHUB_RAW/hjkcai/dotfiles/master/zshrc >> $HOME/.zshrc
-
 # tmux config
 section "Installing tmux config..."
 mkdir -p $HOME/.config/tmux
@@ -253,7 +253,7 @@ fi
 # Node packages
 section "Installing common Node.js packages..."
 npm install -g \
-  concurrently create-react-app http-server lerna \
+  concurrently create-react-app http-server \
   npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
 
 section "Enjoy!"
