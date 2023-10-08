@@ -41,11 +41,13 @@ if ! [ -z "$GIT_NAME" ]; then
 fi
 
 # Locale & Timezone
-section "Setting locale and timezone..."
-sudo bash -c "echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen"
-sudo locale-gen
-sudo localectl set-locale LANG=en_US.UTF-8
-sudo timedatectl set-timezone Asia/Shanghai
+if hasCommand "locale-gen"; then
+  section "Setting locale and timezone..."
+  sudo bash -c "echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen"
+  sudo locale-gen
+  sudo localectl set-locale LANG=en_US.UTF-8
+  sudo timedatectl set-timezone Asia/Shanghai
+fi
 
 # Arch Linux
 if hasCommand "pacman"; then
@@ -64,8 +66,8 @@ if hasCommand "pacman"; then
   # Recommended packages
   section "Installing basic packages..."
   sudo pacman -S --noconfirm --needed \
-    git base-devel man wget exa broot htop zsh docker docker-compose tmux neovim bat duf \
-    ncdu unzip neofetch vim rsync nmap net-tools man-db lsof dog tldr httpie cronie fd sd p7zip
+    git base-devel man man-db wget eza broot htop zsh docker docker-compose tmux neovim bat duf \
+    ncdu unzip neofetch vim rsync nmap net-tools lsof dog httpie cronie fd sd p7zip rhash jq
 
   # Docker
   section "Enabling Docker..."
@@ -111,6 +113,36 @@ if hasCommand "pacman"; then
   fi
 fi
 
+# Termux
+if hasCommand "termux-change-repo"; then
+  # China mirror
+  if [ "$CHINA_MAINLAND" != '0' ]; then
+    section "Switching to pkg China mirror..."
+    echo "deb https://mirrors.ustc.edu.cn/termux/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
+  fi
+
+  section "Installing basic packages..."
+  pkg install -y \
+    nodejs-lts python-pip \
+    git man wget eza broot htop zsh tmux neovim bat duf \
+    ncdu unzip neofetch vim rsync nmap net-tools lsof dog cronie fd sd p7zip rhash jq
+
+  mkdir $HOME/.n # Skip tj/n and Node.js installation step
+  pip install httpie
+
+  if ! [ -d $HOME/storage ]; then
+    section "Initializing storage..."
+    termux-setup-storage
+  fi
+
+  section "Installing termux config..."
+  mkdir -p $HOME/.termux
+  curl https://$GITHUB_RAW/hjkcai/dotfiles/master/termux.properties > $HOME/.termux/termux.properties
+  curl https://$GITHUB/googlefonts/Inconsolata/releases/download/v3.000/Inconsolata-VF.ttf > $HOME/.termux/font.ttf
+  curl https://$GITHUB_RAW/termux/termux-styling/blob/master/app/src/main/assets/colors/nord.properties > $HOME/.termux/colors.properties
+  termux-reload-settings
+fi
+
 # Git
 if ! [ -z "$GIT_NAME" ]; then
   section "Setting up Git..."
@@ -120,40 +152,61 @@ if ! [ -z "$GIT_NAME" ]; then
   git config --global credential.helper store
 fi
 
+# zsh
+section "Changing default shell to zsh..."
+if hasCommand "termux-change-repo"; then
+  chsh -s zsh
+else
+  sudo chsh -s /usr/bin/zsh $USER
+fi
+
 # oh-my-zsh
+ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if ! [ -d $HOME/.oh-my-zsh ]; then
   section "Installing oh-my-zsh..."
-  sudo chsh -s /usr/bin/zsh $USER
+
   curl -fsSL https://$GITHUB_RAW/ohmyzsh/ohmyzsh/master/tools/install.sh > /tmp/oh-my-zsh
   if [ "$CHINA_MAINLAND" != '0' ]; then
     sed -i "s|github.com|$GITHUB|g" /tmp/oh-my-zsh
   fi
   RUNZSH=no bash /tmp/oh-my-zsh
 
-  section "Installing oh-my-zsh plugins..."
-  ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
-  git clone https://$GITHUB/jeffreytse/zsh-vi-mode $ZSH_CUSTOM/plugins/zsh-vi-mode
-  git clone https://$GITHUB/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-  git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CUSTOM/plugins/fast-syntax-highlighting
-  git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
-  git clone https://$GITHUB/Aloxaf/fzf-tab.git $ZSH_CUSTOM/plugins/fzf-tab
+  # agkozak zsh theme
+  [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
+  git clone https://$GITHUB/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
+  ln -s $ZSH_CUSTOM/themes/agkozak/agkozak-zsh-prompt.plugin.zsh $ZSH_CUSTOM/themes/agkozak.zsh-theme
+elif hasCommand "omz"; then
+  section "Updating oh-my-zsh..."
+  omz update
+fi
 
-  # fzf
+# oh-my-zsh plugins
+section "Installing oh-my-zsh plugins..."
+git clone https://$GITHUB/jeffreytse/zsh-vi-mode.git $ZSH_CUSTOM/plugins/zsh-vi-mode
+git clone https://$GITHUB/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CUSTOM/plugins/fast-syntax-highlighting
+git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
+git clone https://$GITHUB/Aloxaf/fzf-tab.git $ZSH_CUSTOM/plugins/fzf-tab
+git clone https://$GITHUB/agkozak/zsh-z.git $ZSH_CUSTOM/plugins/zsh-z
+git clone https://$GITHUB/Pilaton/OhMyZsh-full-autoupdate.git $ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate
+if hasCommand "omz"; then
+  section "Updating oh-my-zsh plugins..."
+  source $ZSH_CUSTOM/plugins/ohmyzsh-full-autoupdate/ohmyzsh-full-autoupdate.plugin.zsh
+fi
+
+# fzf
+if ! hasCommand "fzf"; then
+  section "Installing fzf..."
   git clone --depth 1 https://$GITHUB/junegunn/fzf.git $HOME/.fzf
   if [ "$CHINA_MAINLAND" != '0' ]; then
     sed -i "s|github.com|$GITHUB|g" $HOME/.fzf/install
   fi
   $HOME/.fzf/install --bin
-
-  # agkozak zsh theme
-  [[ ! -d $ZSH_CUSTOM/themes ]] && mkdir $ZSH_CUSTOM/themes
-  git clone https://$GITHUB/agkozak/agkozak-zsh-prompt $ZSH_CUSTOM/themes/agkozak
-  ln -s $ZSH_CUSTOM/themes/agkozak/agkozak-zsh-prompt.plugin.zsh $ZSH_CUSTOM/themes/agkozak.zsh-theme
 fi
 
 # broot
-section "Installing broot..."
 if hasCommand "broot"; then
+  section "Installing broot..."
   zsh -c 'broot --install'
   curl https://$GITHUB_RAW/kreigor/broot-nord-theme/main/broot.skin > $HOME/.config/broot/nord.toml
   sed -i "s|dark-blue-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
@@ -201,7 +254,7 @@ fi
 section "Installing common Node.js packages..."
 npm install -g \
   concurrently create-react-app http-server lerna \
-  npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno
+  npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
 
 section "Enjoy!"
 neofetch

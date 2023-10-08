@@ -1,3 +1,11 @@
+if [ "$CHINA_MAINLAND" != '0' ]; then
+  export GITHUB=ghproxy.com/https://github.com
+  export GITHUB_RAW=ghproxy.com/https://raw.githubusercontent.com
+else
+  export GITHUB=github.com
+  export GITHUB_RAW=raw.githubusercontent.com
+fi
+
 # PATH
 export PATH=$HOME/.local/bin:$HOME/.bin:$PATH
 
@@ -34,7 +42,7 @@ function zvm_after_init() {
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract z zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab)
+plugins=(git sudo node npm macos extract zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab zsh-z)
 source $ZSH/oh-my-zsh.sh
 
 # zsh config
