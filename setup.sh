@@ -122,8 +122,9 @@ if hasCommand "termux-change-repo"; then
   fi
 
   section "Installing basic packages..."
+  pkg upgrade -y
   pkg install -y \
-    nodejs-lts python-pip which \
+    nodejs-lts python-pip which tsu \
     git man wget eza broot htop zsh tmux neovim bat duf \
     ncdu unzip neofetch vim rsync nmap net-tools lsof dog cronie fd sd p7zip rhash jq
 
