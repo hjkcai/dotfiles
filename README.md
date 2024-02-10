@@ -7,7 +7,7 @@ Use the following script to install:
 ### China Mainland
 
 ```bash
-bash -c "$(curl -fsSL https://ghproxy.com/raw.githubusercontent.com/hjkcai/dotfiles/master/setup.sh)" && exec zsh
+bash -c "$(curl -fsSL https://mirror.ghproxy.com/raw.githubusercontent.com/hjkcai/dotfiles/master/setup.sh)" && exec zsh
 ```
 
 ### Otherwise
