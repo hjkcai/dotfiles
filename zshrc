@@ -1,6 +1,6 @@
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  export GITHUB=ghproxy.com/https://github.com
-  export GITHUB_RAW=ghproxy.com/https://raw.githubusercontent.com
+  export GITHUB=mirror.ghproxy.com/https://github.com
+  export GITHUB_RAW=mirror.ghproxy.com/https://raw.githubusercontent.com
 else
   export GITHUB=github.com
   export GITHUB_RAW=raw.githubusercontent.com
