@@ -10,8 +10,8 @@ function hasCommand {
 }
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  GITHUB=ghproxy.com/https://github.com
-  GITHUB_RAW=ghproxy.com/https://raw.githubusercontent.com
+  GITHUB=mirror.ghproxy.com/https://github.com
+  GITHUB_RAW=mirror.ghproxy.com/https://raw.githubusercontent.com
 else
   GITHUB=github.com
   GITHUB_RAW=raw.githubusercontent.com
