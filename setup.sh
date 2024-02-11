@@ -231,7 +231,7 @@ if ! [ -d $HOME/.n ]; then
   curl -L https://$GITHUB_RAW/mklement0/n-install/stable/bin/n-install > /tmp/n-install
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
-    export N_NODE_MIRROR=https://registry.npmmirror.com/mirrors/node
+    export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
     sed -i "s|https\://github.com|https\://$GITHUB|g" /tmp/n-install
   fi
 
