@@ -15,7 +15,7 @@ if [ -d "$HOME/.n" ]; then
   export PATH=$N_PREFIX/bin:$PATH
 
   if [ "$CHINA_MAINLAND" != '0' ]; then
-    export N_NODE_MIRROR=https://npm.taobao.org/mirrors/node
+    export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
   fi
 fi
 
