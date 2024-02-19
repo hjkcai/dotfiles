@@ -66,8 +66,8 @@ if hasCommand "pacman"; then
   # Recommended packages
   section "Installing basic packages..."
   sudo pacman -S --noconfirm --needed \
-    git base-devel man man-db wget eza broot htop zsh docker docker-compose tmux neovim bat duf \
-    ncdu unzip neofetch vim rsync nmap net-tools lsof dog httpie cronie fd sd p7zip rhash jq
+    git base-devel man man-db wget eza broot htop zsh docker docker-compose tmux bat duf \
+    ncdu unzip neofetch vim rsync nmap net-tools lsof dog httpie cronie fd sd p7zip rhash jq helix
 
   # Docker
   section "Enabling Docker..."
@@ -158,7 +158,7 @@ section "Changing default shell to zsh..."
 if hasCommand "termux-change-repo"; then
   chsh -s zsh
 else
-  sudo chsh -s /usr/bin/zsh $USER
+  sudo chsh -s $(which zsh) $USER
 fi
 
 # oh-my-zsh
@@ -246,7 +246,8 @@ fi
 
 # Node packages
 section "Installing common Node.js packages..."
-npm install -g \
+npm install -g pnpm
+pnpm install -g \
   concurrently create-react-app http-server \
   npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
 
