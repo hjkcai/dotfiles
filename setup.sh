@@ -247,6 +247,7 @@ fi
 # Node packages
 section "Installing common Node.js packages..."
 npm install -g pnpm
+pnpm setup
 pnpm install -g \
   concurrently create-react-app http-server \
   npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
