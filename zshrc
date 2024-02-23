@@ -42,7 +42,7 @@ function zvm_after_init() {
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agkozak"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git sudo node npm macos extract zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab zsh-z)
+plugins=(git sudo node npm macos extract zsh-vi-mode fast-syntax-highlighting zsh-autosuggestions fzf-tab zsh-z zsh-docker-aliases)
 source $ZSH/oh-my-zsh.sh
 
 # zsh config
@@ -132,6 +132,21 @@ alias adb-deeplink="adb shell am start -W -a android.intent.action.VIEW -d"
 alias adb-paste="adb shell am broadcast -a clipper.get"
 alias adb-copy="adb shell am broadcast -a clipper.set -e text"
 alias adb-kill="adb shell am force-stop"
+
+# Helix
+if which hx > /dev/null 2>&1; then
+  export EDITOR="hx"
+  export VISUAL="hx"
+elif which helix > /dev/null 2>&1; then
+  export EDITOR="helix"
+  export VISUAL="helix"
+  alias hx="helix"
+fi
+
+# Docker
+alias dkcdu="docker-compose down && docker-compose up"
+alias dkcdU="docker-compose down && docker-compose up -d"
+alias dkclf="docker-compose logs -f --tail 100"
 
 # Haskell Stack
 if type "stack" > /dev/null; then

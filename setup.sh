@@ -193,6 +193,7 @@ git clone https://$GITHUB/zdharma-continuum/fast-syntax-highlighting.git $ZSH_CU
 git clone https://$GITHUB/unixorn/fzf-zsh-plugin.git $ZSH_CUSTOM/plugins/fzf-zsh-plugin
 git clone https://$GITHUB/Aloxaf/fzf-tab.git $ZSH_CUSTOM/plugins/fzf-tab
 git clone https://$GITHUB/agkozak/zsh-z.git $ZSH_CUSTOM/plugins/zsh-z
+git clone https://$GITHUB/akarzim/zsh-docker-aliases.git $ZSH_CUSTOM/plugins/zsh-docker-aliases
 
 # fzf
 if ! hasCommand "fzf"; then
@@ -224,6 +225,11 @@ if ! [ -d $HOME/.tmux/plugins/tpm ]; then
 fi
 $HOME/.tmux/plugins/tpm/bin/install_plugins
 
+# Helix config
+section "Installing Helix config..."
+mkdir -p $HOME/.config/helix
+curl https://$GITHUB_RAW/hjkcai/dotfiles/master/helix.toml > $HOME/.config/helix/config.toml
+
 # Node.js
 if ! [ -d $HOME/.n ]; then
   section "Installing tj/n and Node.js..."
@@ -247,10 +253,8 @@ fi
 # Node packages
 section "Installing common Node.js packages..."
 npm install -g pnpm
-pnpm setup && source ~/.zshrc
-pnpm install -g \
-  concurrently create-react-app http-server \
-  npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
+zsh -c "pnpm setup"
+zsh -c "pnpm install -g concurrently create-react-app http-server npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr"
 
 section "Enjoy!"
 neofetch
