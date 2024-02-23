@@ -180,7 +180,6 @@ alias hide-hidden="chflags hidden"
 # Other
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias hs="http-server"
-alias hx="helix"
 alias sudo="sudo " # sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias env="/usr/bin/env -0 | sort -z | tr '\0' '\n' | sd '(^|\n)([A-Za-z0-9_]+)=' \$(printf '\$1\033[1;32m\$2\033[0m=')"
 function tm() {
