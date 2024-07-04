@@ -18,10 +18,8 @@ else
 fi
 
 # Checks
-if [ "$USER" = "root" ]; then
-  echo "You cannot run this script as root. Remember to install sudo firstly."
-  exit 1
-fi
+if [ "$USER" = "root" ]; then echo "You cannot run this script as root. Remember to install sudo firstly."; exit 1; fi
+if ! hasCommand "sudo"; then echo "Missing required command: sudo"; exit 1; fi
 
 # Hostname
 section "Please enter your new HOSTNAME (Currently '$HOSTNAME'). Leave it empty to skip."
@@ -144,6 +142,11 @@ if hasCommand "termux-change-repo"; then
   termux-reload-settings
 fi
 
+# Post-install check
+if ! hasCommand "git"; then echo "Missing required command: git"; exit 1; fi
+if ! hasCommand "zsh"; then echo "Missing required command: zsh"; exit 1; fi
+if ! hasCommand "make"; then echo "Missing required command: make"; exit 1; fi
+
 # Git
 if ! [ -z "$GIT_NAME" ]; then
   section "Setting up Git..."
@@ -253,8 +256,11 @@ fi
 # Node packages
 section "Installing common Node.js packages..."
 npm install -g pnpm
-zsh -c "pnpm setup"
-zsh -c "pnpm install -g concurrently create-react-app http-server npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr"
+zsh -c "
+  pnpm setup
+  source ~/.zshrc
+  pnpm install -g concurrently create-react-app http-server npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
+"
 
 section "Enjoy!"
 neofetch
