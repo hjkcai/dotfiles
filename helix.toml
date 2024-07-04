@@ -1,7 +1,7 @@
 theme = "nord"
 
 [editor]
-bufferline = multiple
+bufferline = "multiple"
 cursorline = true
 true-color = true
 color-modes = true

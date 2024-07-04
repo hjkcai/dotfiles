@@ -69,6 +69,11 @@ if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
   source $HOME/.config/broot/launcher/bash/br
 fi
 
+# Rust cargo
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
 # z
 alias zl="z -l"
 alias zc="z -c"
