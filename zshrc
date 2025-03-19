@@ -1,13 +1,13 @@
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  export GITHUB=mirror.ghproxy.com/https://github.com
-  export GITHUB_RAW=mirror.ghproxy.com/https://raw.githubusercontent.com
+  export GITHUB=ghfast.top/https://github.com
+  export GITHUB_RAW=ghfast.top/https://raw.githubusercontent.com
 else
   export GITHUB=github.com
   export GITHUB_RAW=raw.githubusercontent.com
 fi
 
 # PATH
-export PATH=$HOME/.local/bin:$HOME/.bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/.bin:$HOME/.cargo/bin:$PATH
 
 # Node.js related
 if [ -d "$HOME/.n" ]; then
