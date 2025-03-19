@@ -10,8 +10,8 @@ function hasCommand {
 }
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  GITHUB=mirror.ghproxy.com/https://github.com
-  GITHUB_RAW=mirror.ghproxy.com/https://raw.githubusercontent.com
+  GITHUB=ghfast.top/https://github.com
+  GITHUB_RAW=ghfast.top/https://raw.githubusercontent.com
 else
   GITHUB=github.com
   GITHUB_RAW=raw.githubusercontent.com
@@ -47,6 +47,47 @@ if hasCommand "locale-gen"; then
   sudo timedatectl set-timezone Asia/Shanghai
 fi
 
+# Fedora & CentOS
+if hasCommand "dnf"; then
+  # Recommended packages
+  section "Installing basic packages..."
+  sudo dnf -y install git eza htop zsh docker docker-compose tmux bat duf ncdu unzip fastfetch rsync nmap lsof httpie cronie p7zip rhash jq helix cargo
+
+  if [ "$CHINA_MAINLAND" != '0' ]; then
+    mkdir -p ${CARGO_HOME:-$HOME/.cargo}
+
+    cat << EOF | tee ${CARGO_HOME:-$HOME/.cargo}/config.toml
+[source.crates-io]
+replace-with = 'ustc'
+
+[source.ustc]
+registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+
+[registries.ustc]
+index = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+EOF
+  fi
+
+  cargo install broot fd-find sd
+
+  # Docker
+  section "Enabling Docker..."
+  sudo systemctl enable --now docker
+  sudo usermod -a -G docker $USER
+  sudo docker network create apps
+  if [ "$CHINA_MAINLAND" != '0' ]; then
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    cat << EOF | sudo tee /etc/systemd/system/docker.service.d/proxy.conf
+[Service]
+Environment="HTTP_PROXY=http://10.0.1.2:7890/"
+Environment="HTTPS_PROXY=http://10.0.1.2:7890/"
+Environment="NO_PROXY=127.0.0.1,localhost,192.168.*,*.example.com,10.*.*.*"
+EOF
+  fi
+
+  sudo systemctl enable --now crond
+fi
+
 # Arch Linux
 if hasCommand "pacman"; then
   # China mirror
@@ -65,7 +106,7 @@ if hasCommand "pacman"; then
   section "Installing basic packages..."
   sudo pacman -S --noconfirm --needed \
     git base-devel man man-db wget eza broot htop zsh docker docker-compose tmux bat duf \
-    ncdu unzip neofetch vim rsync nmap net-tools lsof dog httpie cronie fd sd p7zip rhash jq helix
+    ncdu unzip fastfetch vim rsync nmap net-tools lsof dog httpie cronie fd sd p7zip rhash jq helix
 
   # Docker
   section "Enabling Docker..."
@@ -124,7 +165,7 @@ if hasCommand "termux-change-repo"; then
   pkg install -y \
     nodejs-lts python-pip which tsu android-tools \
     git man wget eza broot htop zsh tmux neovim bat duf \
-    ncdu unzip neofetch vim rsync nmap net-tools lsof dog cronie fd sd p7zip rhash jq
+    ncdu unzip fastfetch vim rsync nmap net-tools lsof dog cronie fd sd p7zip rhash jq
 
   mkdir $HOME/.n # Skip tj/n and Node.js installation step
   pip install httpie
@@ -255,12 +296,7 @@ fi
 
 # Node packages
 section "Installing common Node.js packages..."
-npm install -g pnpm
-zsh -c "
-  pnpm setup
-  source ~/.zshrc
-  pnpm install -g concurrently create-react-app http-server npm-check-updates nodemon pm2 ts-node whistle yarn pnpm esno tldr
-"
+npm install -g concurrently http-server npm-check-updates nodemon pm2 whistle yarn pnpm tldr tsx
 
 section "Enjoy!"
-neofetch
+fastfetch
