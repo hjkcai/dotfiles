@@ -128,6 +128,7 @@ in
     viu
     wget
     which
+    witr
     zip
   ] ++ [ n ];
 
