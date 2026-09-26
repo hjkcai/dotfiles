@@ -1,0 +1,181 @@
+{
+  "nodes": {
+    "agkozak-zsh-prompt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780013654,
+        "narHash": "sha256-C9lyOm2+RVLOUSO5Vz013uTobnN+SBE1Jm8GuJZ7T7U=",
+        "type": "tarball",
+        "url": "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz"
+      }
+    },
+    "broot-nord": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634738995,
+        "narHash": "sha256-p+xLTFnZgAB6c91KbcQfZrJ9XDNtJVMeqcdddIZSaiY=",
+        "type": "tarball",
+        "url": "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz"
+      }
+    },
+    "dracula-nord": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1675050185,
+        "narHash": "sha256-rhWzubpoDM71UUVtZP8csaybb/YQtIy3t3ifDJXUXHw=",
+        "type": "tarball",
+        "url": "https://github.com/hjkcai/dracula-nord/archive/636c199a1461df66237e55918dfe43c4537e6860.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/hjkcai/dracula-nord/archive/636c199a1461df66237e55918dfe43c4537e6860.tar.gz"
+      }
+    },
+    "fast-syntax-highlighting": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788160444,
+        "narHash": "sha256-gXTJv+k4OSgwiM7vy91v7tLLHre0f5XeSor3n/b2euI=",
+        "type": "tarball",
+        "url": "https://github.com/zdharma-continuum/fast-syntax-highlighting/archive/4672ad5dd9ad68a7effc1476d65afb7c584ce2b3.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/zdharma-continuum/fast-syntax-highlighting/archive/4672ad5dd9ad68a7effc1476d65afb7c584ce2b3.tar.gz"
+      }
+    },
+    "fzf-tab": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780551775,
+        "narHash": "sha256-YhTSu0P7mFlVx1zBvbT0jNstkamcZHhPYJHKMAHgyuM=",
+        "type": "tarball",
+        "url": "https://github.com/Aloxaf/fzf-tab/archive/24105b15714bfec37989ed5c5b6e60f572253019.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/Aloxaf/fzf-tab/archive/24105b15714bfec37989ed5c5b6e60f572253019.tar.gz"
+      }
+    },
+    "fzf-zsh-plugin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788778161,
+        "narHash": "sha256-MN5CbwzTT7G0zZIkXcZNrmcey7g85ODG28/fQq9+wbQ=",
+        "type": "tarball",
+        "url": "https://github.com/unixorn/fzf-zsh-plugin/archive/e3894e83a3e8a3e8751456d56c51bb49b34e8d2b.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/unixorn/fzf-zsh-plugin/archive/e3894e83a3e8a3e8751456d56c51bb49b34e8d2b.tar.gz"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790292277,
+        "narHash": "sha256-z+knvdMItRrMonmG4RIsqKYIa/hwYUzKjotDTfC5DDc=",
+        "type": "tarball",
+        "url": "https://github.com/nix-community/home-manager/archive/4b9add8645d5e2b0f7de18f7a442d08fe2bdcc91.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/nix-community/home-manager/archive/4b9add8645d5e2b0f7de18f7a442d08fe2bdcc91.tar.gz"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1790185690,
+        "narHash": "sha256-xJ+X4hBtOcAFGBOe5nAMyMUeF9foJBmIOu3NjBqBycU=",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz"
+      }
+    },
+    "root": {
+      "inputs": {
+        "agkozak-zsh-prompt": "agkozak-zsh-prompt",
+        "broot-nord": "broot-nord",
+        "dracula-nord": "dracula-nord",
+        "fast-syntax-highlighting": "fast-syntax-highlighting",
+        "fzf-tab": "fzf-tab",
+        "fzf-zsh-plugin": "fzf-zsh-plugin",
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs",
+        "zsh-autosuggestions": "zsh-autosuggestions",
+        "zsh-docker-aliases": "zsh-docker-aliases",
+        "zsh-vi-mode": "zsh-vi-mode",
+        "zsh-z": "zsh-z"
+      }
+    },
+    "zsh-autosuggestions": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1750781703,
+        "narHash": "sha256-KmkXgK1J6iAyb1FtF/gOa0adUnh1pgFsgQOUnNngBaE=",
+        "type": "tarball",
+        "url": "https://github.com/zsh-users/zsh-autosuggestions/archive/85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/zsh-users/zsh-autosuggestions/archive/85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5.tar.gz"
+      }
+    },
+    "zsh-docker-aliases": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781706612,
+        "narHash": "sha256-nvcG+r4pks40aiZoH5cDIfwhg5aoWImOo7CF0SinFLM=",
+        "type": "tarball",
+        "url": "https://github.com/akarzim/zsh-docker-aliases/archive/77716803ac38ed0ab414c71ff25c8f9565ec2849.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/akarzim/zsh-docker-aliases/archive/77716803ac38ed0ab414c71ff25c8f9565ec2849.tar.gz"
+      }
+    },
+    "zsh-vi-mode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784474380,
+        "narHash": "sha256-5ZYcxl5sjfn1XfQ7D28Si4OXwCHHapAJSboJfNgl/5A=",
+        "type": "tarball",
+        "url": "https://github.com/jeffreytse/zsh-vi-mode/archive/91cafe4a09b6670cb8e761aa413e5f7b9e00816f.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/jeffreytse/zsh-vi-mode/archive/91cafe4a09b6670cb8e761aa413e5f7b9e00816f.tar.gz"
+      }
+    },
+    "zsh-z": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786729666,
+        "narHash": "sha256-r12crTTTYRYztuTCz7/59d4ig/O1x+I7lvf4r+b2fFM=",
+        "type": "tarball",
+        "url": "https://github.com/agkozak/zsh-z/archive/102fb78036ed76feedf623907483691777a1d510.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/agkozak/zsh-z/archive/102fb78036ed76feedf623907483691777a1d510.tar.gz"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

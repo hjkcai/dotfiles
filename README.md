@@ -2,6 +2,8 @@
 
 The nice dotfiles and setup scripts for me
 
+新机器用 Nix 配置，步骤在 [nix/README.md](nix/README.md)。下面的 `setup.sh` 是旧的安装方式。
+
 Use the following script to install:
 
 ### China Mainland
