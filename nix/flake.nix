@@ -57,6 +57,11 @@
       url = "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz";
       flake = false;
     };
+    # nixpkgs has no tj/n package. Pin the upstream script instead.
+    n = {
+      url = "https://github.com/tj/n/archive/371affba8a21ec95ca1cab784ef409c879e6ce83.tar.gz";
+      flake = false;
+    };
   };
 
   outputs =

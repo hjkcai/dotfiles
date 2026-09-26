@@ -32,7 +32,7 @@ CHINA_MAINLAND=0 ./setup.sh
 | 用途 | `CHINA_MAINLAND` 不是 `0` | `CHINA_MAINLAND=0` |
 |---|---|---|
 | Nix 二进制缓存 | 中科大，其次 cache.nixos.org | cache.nixos.org |
-| npm | `https://mirrors.ustc.edu.cn/npm/` | 不改你原来的 registry |
+| npm | `https://registry.npmmirror.com/` | 不改你原来的 registry |
 | Node 二进制（`n`） | `https://mirrors.ustc.edu.cn/node/` | 官方 |
 | crates.io | 中科大 sparse index | 不写 `~/.cargo/config.toml` |
 | `GITHUB` / `GITHUB_RAW` | `ghfast.top` 前缀 | github.com |

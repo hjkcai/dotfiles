@@ -20,6 +20,11 @@ let
   china = builtins.getEnv "CHINA_MAINLAND" != "0";
   gitName = builtins.getEnv "GIT_NAME";
   gitEmail = builtins.getEnv "GIT_EMAIL";
+  n = pkgs.runCommand "n-9.2.3" { } ''
+    mkdir -p $out/bin
+    cp ${inputs.n}/bin/n $out/bin/n
+    chmod +x $out/bin/n
+  '';
 
   # npm specs passed through to `npm install`. Add @range to pin one later, for example "http-server@14".
   npmGlobals = [
@@ -110,7 +115,6 @@ in
     jq
     lsof
     ncdu
-    n
     nmap
     p7zip
     pnpm
@@ -123,8 +127,9 @@ in
     vim
     viu
     wget
+    which
     zip
-  ];
+  ] ++ [ n ];
 
   programs.git = {
     enable = true;
@@ -263,7 +268,7 @@ in
         if [ "$CHINA_MAINLAND" != '0' ]; then
           export GITHUB=ghfast.top/https://github.com
           export GITHUB_RAW=ghfast.top/https://raw.githubusercontent.com
-          export NPM_CONFIG_REGISTRY=https://mirrors.ustc.edu.cn/npm/
+          export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
           export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
         else
           export GITHUB=github.com
@@ -414,10 +419,19 @@ in
   # Node itself is installed by tj/n into $N_PREFIX. This only downloads a version when none is present.
   home.activation.npmGlobals = lib.hm.dag.entryAfter [ "installPackages" ] ''
     export N_PREFIX="$HOME/.n"
-    export PATH="$N_PREFIX/bin:${pkgs.n}/bin:$PATH"
+    export PATH="$N_PREFIX/bin:${lib.makeBinPath [
+      n
+      pkgs.curl
+      pkgs.gawk
+      pkgs.gnugrep
+      pkgs.gnused
+      pkgs.coreutils
+      pkgs.gnutar
+      pkgs.xz
+    ]}:$PATH"
     if [ "''${CHINA_MAINLAND:-}" != 0 ]; then
       export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
-      export NPM_CONFIG_REGISTRY=https://mirrors.ustc.edu.cn/npm/
+      export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
     fi
     if ! command -v node >/dev/null 2>&1; then
       n lts

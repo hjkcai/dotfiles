@@ -95,6 +95,19 @@
         "url": "https://github.com/nix-community/home-manager/archive/4b9add8645d5e2b0f7de18f7a442d08fe2bdcc91.tar.gz"
       }
     },
+    "n": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1713659644,
+        "narHash": "sha256-xXpBVGE1hitQnCI781adiZQUpUf+KKlQtfoT8N1kKQw=",
+        "type": "tarball",
+        "url": "https://github.com/tj/n/archive/371affba8a21ec95ca1cab784ef409c879e6ce83.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/tj/n/archive/371affba8a21ec95ca1cab784ef409c879e6ce83.tar.gz"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1790185690,
@@ -116,6 +129,7 @@
         "fzf-tab": "fzf-tab",
         "fzf-zsh-plugin": "fzf-zsh-plugin",
         "home-manager": "home-manager",
+        "n": "n",
         "nixpkgs": "nixpkgs",
         "zsh-autosuggestions": "zsh-autosuggestions",
         "zsh-docker-aliases": "zsh-docker-aliases",
