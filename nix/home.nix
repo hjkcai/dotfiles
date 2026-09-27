@@ -22,6 +22,18 @@ let
   gitEmail = builtins.getEnv "GIT_EMAIL";
   versions = import ./versions.nix;
 
+  # Oh My Zsh is inserted at this line. The two sides stay in source order.
+  zshrcParts =
+    let
+      parts = lib.splitString "# {{HOME_MANAGER}}\n" (builtins.readFile ./config/zshrc.zsh);
+    in
+    if builtins.length parts == 2 then
+      parts
+    else
+      throw "config/zshrc.zsh must contain exactly one \"# {{HOME_MANAGER}}\" line";
+  zshrcBefore = builtins.elemAt zshrcParts 0;
+  zshrcAfter = builtins.elemAt zshrcParts 1;
+
   # pkgs.<name> from the locked nixpkgs must be this exact version.
   pin = name:
     let
@@ -190,8 +202,8 @@ in
       ];
     };
     initContent = lib.mkMerge [
-      (lib.mkBefore (builtins.readFile ./config/zsh-before.zsh))
-      (lib.mkAfter (builtins.readFile ./config/zsh-after.zsh))
+      (lib.mkBefore zshrcBefore)
+      (lib.mkAfter zshrcAfter)
     ];
   };
 
