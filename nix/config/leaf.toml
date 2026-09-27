@@ -1,0 +1,2 @@
+# Color theme. Relative paths are resolved from this config file directory.
+theme = "nord.toml"

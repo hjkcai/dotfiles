@@ -149,3 +149,9 @@ clear-scrollback-and-screen() {
 }
 zle -N clear-scrollback-and-screen
 bindkey -v '^L' clear-scrollback-and-screen
+
+# herdr-automatic-rename. The plugin checkout is created by herdr itself.
+for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/hook.zsh(N); do
+  source $_f
+  break
+done

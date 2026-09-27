@@ -129,11 +129,6 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 if ! hasCommand "git"; then echo "Missing required command: git"; exit 1; fi
 if ! hasCommand "zsh"; then echo "Missing required command: zsh"; exit 1; fi
 
-# Nix garbage collection
-# 删掉旧的 profile 代，以及不再被引用的 store 路径。
-section "Collecting Nix garbage..."
-sudo "$(command -v nix-collect-garbage)" -d
-
 # zsh
 section "Changing default shell to zsh..."
 ZSH_PATH=`which zsh`

@@ -178,6 +178,12 @@ in
   xdg.configFile."broot/nord.toml".source = "${inputs.broot-nord}/broot.skin";
   xdg.configFile."broot/conf.hjson".source = ./config/broot.hjson;
 
+  xdg.configFile."herdr/config.toml".source = ./config/herdr.toml;
+  xdg.configFile."herdr-automatic-rename/config.sh".source = ./config/herdr-automatic-rename.sh;
+
+  xdg.configFile."leaf/config.toml".source = ./config/leaf.toml;
+  xdg.configFile."leaf/nord.toml".source = ./config/leaf-nord.toml;
+
   programs.zsh = {
     enable = true;
     package = pin "zsh";
