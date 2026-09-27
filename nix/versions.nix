@@ -5,6 +5,7 @@
 # npm entries are exact registry versions. node is a major version passed to n, and only when node is absent.
 {
   packages = {
+    autorestic = "1.8.3";
     bat = "0.26.1";
     broot = "1.60.1";
     curl = "8.22.0";
@@ -27,6 +28,8 @@
     nmap = "7.991";
     p7zip = "17.06";
     pnpm = "12.3.4";
+    redu = "0.2.15";
+    restic = "0.18.1";
     rhash = "1.4.6";
     ripgrep = "15.2.0";
     rsync = "3.5.0";
