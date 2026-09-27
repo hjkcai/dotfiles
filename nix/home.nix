@@ -146,7 +146,7 @@ in
 
   programs.fzf = {
     enable = true;
-    enableZshIntegration = false;
+    enableZshIntegration = true;
   };
 
   programs.helix.enable = true;

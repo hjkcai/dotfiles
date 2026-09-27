@@ -29,7 +29,7 @@
     p7zip = "17.06";
     pnpm = "12.3.4";
     redu = "0.2.15";
-    restic = "0.18.1";
+    restic = "0.19.1";
     rhash = "1.4.6";
     ripgrep = "15.2.0";
     rsync = "3.5.0";

@@ -23,7 +23,7 @@ exec zsh
 CHINA_MAINLAND=0 ./setup.sh
 ```
 
-镜像选择只写进 `/etc/nix/nix.conf`，由 nix-daemon 读取，所以需要能 `sudo`。不写到 `~/.config/nix/nix.conf`：普通用户不在 `trusted-users` 里，那里的 substituter 会被忽略，并出现 `you are not a trusted user`。如果 Nix 报 `nix/flake.nix is not tracked by Git`，说明当前目录还不是一次完整克隆，先在仓库根目录执行 `git add nix`，然后再运行 `./setup.sh`。
+镜像选择写进 `/etc/nix/nix.custom.conf`，由 nix-daemon 读取，所以需要能 `sudo`。Determinate Nix 会覆盖 `/etc/nix/nix.conf`，那个文件里的设置留不住；`nix.custom.conf` 是它用 `!include` 引进来的。不写到 `~/.config/nix/nix.conf`：普通用户不在 `trusted-users` 里，那里的 substituter 会被忽略，并出现 `you are not a trusted user`。如果 Nix 报 `nix/flake.nix is not tracked by Git`，说明当前目录还不是一次完整克隆，先在仓库根目录执行 `git add nix`，然后再运行 `./setup.sh`。
 
 以后改了 `home.nix`、`versions.nix` 或 `config/` 里的文件，在 `nix/` 里重新执行 `./setup.sh`。zsh、tmux、Helix、broot、herdr、leaf、hunk 和 Cargo 的配置在 `config/`，`home.nix` 只引用这些文件。leaf 的 Nord 主题和 `config.toml` 放在同一目录，主题路径写相对路径。hunk 由它自己的 flake 安装，配置在 `config/hunk.toml`，扩展插件不在这份配置里。`config/zshrc.zsh` 里的 `# {{HOME_MANAGER}}` 是 oh-my-zsh 的插入位置，这一行要保留，且只能有一行。
 

@@ -25,10 +25,27 @@ if [ "$USER" = "root" ]; then echo "You cannot run this script as root. Remember
 if ! hasCommand "sudo"; then echo "Missing required command: sudo"; exit 1; fi
 if ! hasCommand "curl" && ! hasCommand "wget"; then echo "Missing required command: curl or wget"; exit 1; fi
 
+# -y skips the hostname and Git prompts, as if they were left empty.
+YES=0
+PASS=()
+for arg in "$@"; do
+  if [ "$arg" = "-y" ]; then
+    YES=1
+  else
+    PASS+=("$arg")
+  fi
+done
+set -- "${PASS[@]}"
+
 # Hostname
 section "Please enter your new HOSTNAME (Currently '$HOSTNAME'). Leave it empty to skip."
 echo -n "HOSTNAME: "
-read NEW_HOSTNAME
+if [ "$YES" = 1 ]; then
+  echo
+  NEW_HOSTNAME=
+else
+  read NEW_HOSTNAME
+fi
 if ! [ -z "$NEW_HOSTNAME" ]; then
   sudo hostnamectl set-hostname $NEW_HOSTNAME
 fi
@@ -36,7 +53,12 @@ fi
 # Git (Ask first)
 section "Please enter your default Git information. Leave it empty to skip."
 echo -n 'Username: '
-read GIT_NAME
+if [ "$YES" = 1 ]; then
+  echo
+  GIT_NAME=
+else
+  read GIT_NAME
+fi
 if ! [ -z "$GIT_NAME" ]; then
   echo -n 'Email: '
   read GIT_EMAIL
@@ -74,9 +96,10 @@ if ! hasCommand "nix"; then
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
-# 按 CHINA_MAINLAND 覆盖 /etc/nix/nix.conf 里的二进制缓存，并重启守护进程让它生效。
+# Determinate Nix 会覆盖 /etc/nix/nix.conf，用户设置要写在它 !include 的 nix.custom.conf。
+# 写 substituters 而不是 extra-substituters，镜像才会排在 cache.nixos.org 前面。
 section "Setting up Nix..."
-NIX_CONF=/etc/nix/nix.conf
+NIX_CONF=/etc/nix/nix.custom.conf
 BEGIN="# BEGIN dotfiles china mirror"
 END="# END dotfiles china mirror"
 TMP=`mktemp`
