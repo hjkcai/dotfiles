@@ -25,9 +25,9 @@ CHINA_MAINLAND=0 ./setup.sh
 
 镜像选择写进 `/etc/nix/nix.conf`，所以需要能 `sudo`。如果 Nix 报 `nix/flake.nix is not tracked by Git`，说明当前目录还不是一次完整克隆，先在仓库根目录执行 `git add nix`，然后再运行 `./setup.sh`。
 
-以后改了 `home.nix`、`versions.nix` 或 `config/` 里的文件，在 `nix/` 里重新执行 `./setup.sh`。zsh、tmux、Helix、broot、herdr、leaf、Cargo 和 Nix 的配置在 `config/`，`home.nix` 只引用这些文件。leaf 的 Nord 主题和 `config.toml` 放在同一目录，主题路径写相对路径。`config/zshrc.zsh` 里的 `# {{HOME_MANAGER}}` 是 oh-my-zsh 的插入位置，这一行要保留，且只能有一行。
+以后改了 `home.nix`、`versions.nix` 或 `config/` 里的文件，在 `nix/` 里重新执行 `./setup.sh`。zsh、tmux、Helix、broot、herdr、leaf、hunk、Cargo 和 Nix 的配置在 `config/`，`home.nix` 只引用这些文件。leaf 的 Nord 主题和 `config.toml` 放在同一目录，主题路径写相对路径。hunk 由它自己的 flake 安装，配置在 `config/hunk.toml`，扩展插件不在这份配置里。`config/zshrc.zsh` 里的 `# {{HOME_MANAGER}}` 是 oh-my-zsh 的插入位置，这一行要保留，且只能有一行。
 
-换 Nix 包版本时，先改 `flake.nix` 里的 nixpkgs 提交并更新 `flake.lock`，再把 `versions.nix` 改成新快照里的 `pkgs.<name>.version`。只改版本号、不改 nixpkgs 提交，核对会失败，因为一份 nixpkgs 提交里每个包只有一个版本。npm 的版本只改 `versions.nix` 里的字符串。zsh 插件仍然用 `flake.nix` 里的 Git 提交号锁定。
+换 Nix 包版本时，先改 `flake.nix` 里的 nixpkgs 提交并更新 `flake.lock`，再把 `versions.nix` 改成新快照里的 `pkgs.<name>.version`。只改版本号、不改 nixpkgs 提交，核对会失败，因为一份 nixpkgs 提交里每个包只有一个版本。npm 的版本只改 `versions.nix` 里的字符串。hunk 改 `flake.nix` 里的提交和 `versions.nix` 里的版本字符串，两边要一致。zsh 插件仍然用 `flake.nix` 里的 Git 提交号锁定。
 
 `CHINA_MAINLAND` 的规则和原来的 `setup.sh` 相同：只有值正好是 `0` 才走官方源，不设置就用国内镜像。zsh 每次启动都会先读 `~/.zshrc-private`，再决定这些地址：
 

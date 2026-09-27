@@ -1,6 +1,7 @@
 # Exact versions for everything this config installs.
 # Nix packages must match pkgs.<name>.version from the nixpkgs commit in flake.nix.
 # Evaluation stops when they differ. After moving that commit, update the strings here.
+# hunk is the version built from the hunk flake input.
 # npm entries are exact registry versions. node is a major version passed to n, and only when node is absent.
 {
   packages = {
@@ -12,6 +13,7 @@
     eza = "0.23.5";
     fastfetch = "2.68.1";
     fd = "10.5.0";
+    ffmpeg = "9.0.1";
     fzf = "0.74.4";
     git = "2.55.0";
     git-lfs = "3.7.1";
@@ -50,12 +52,14 @@
   n = "9.2.3";
   node = "24";
 
+  # Built from the hunk flake input, not nixpkgs and not npm.
+  hunk = "0.22.0";
+
   npm = {
     "@playwright/cli" = "0.1.21";
     "@rivolink/leaf" = "1.28.2";
     concurrently = "10.0.5";
     http-server = "14.1.1";
-    hunkdiff = "0.22.0";
     npm-check-updates = "23.1.0";
     pm2 = "7.0.4";
     prettier = "3.9.9";

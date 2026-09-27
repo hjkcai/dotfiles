@@ -1,0 +1,10 @@
+theme = "nord"
+transparent_background = true
+mode = "auto"
+line_numbers = true
+wrap_lines = true
+hunk_headers = false
+menu_bar = false
+agent_notes = false
+copy_decorations = false
+cursor_line = "row"

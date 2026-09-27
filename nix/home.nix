@@ -54,6 +54,8 @@ let
     chmod +x $out/bin/n
   '';
 
+  hunkPackage = inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk;
+
   npmGlobals = lib.mapAttrsToList (name: version: "${name}@${version}") versions.npm;
 
   zshCustom = pkgs.linkFarm "oh-my-zsh-custom" [
@@ -99,6 +101,10 @@ let
   };
 in
 {
+  imports = [
+    inputs.hunk.homeManagerModules.default
+  ];
+
   home.username = username;
   home.homeDirectory = homeDirectory;
   home.stateVersion = "26.05";
@@ -183,6 +189,19 @@ in
 
   xdg.configFile."leaf/config.toml".source = ./config/leaf.toml;
   xdg.configFile."leaf/nord.toml".source = ./config/leaf-nord.toml;
+
+  programs.hunk = {
+    enable = true;
+    package =
+      if hunkPackage.version != versions.hunk then
+        throw ''
+          hunk from the flake input is ${hunkPackage.version}, but versions.nix pins ${versions.hunk}.
+          Update versions.nix after changing the hunk commit in flake.nix.
+        ''
+      else
+        hunkPackage;
+    settings = builtins.fromTOML (builtins.readFile ./config/hunk.toml);
+  };
 
   programs.zsh = {
     enable = true;
