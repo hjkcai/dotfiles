@@ -173,10 +173,6 @@ in
     ];
   };
 
-  xdg.configFile."nix/nix.conf" = lib.mkIf china {
-    source = ./config/nix.conf;
-  };
-
   home.file.".cargo/config.toml" = lib.mkIf china {
     source = ./config/cargo.toml;
   };

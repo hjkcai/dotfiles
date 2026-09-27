@@ -90,7 +90,6 @@ else
   : > $TMP
 fi
 if [ "$CHINA_MAINLAND" != '0' ]; then
-  export NIX_CONFIG="substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/"
   cat >> $TMP << EOF
 
 $BEGIN
