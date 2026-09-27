@@ -110,6 +110,7 @@ in
     git
     git-lfs
     helix
+    herdr
     htop
     httpie
     jq
@@ -292,6 +293,7 @@ in
         }
       '')
       (lib.mkAfter ''
+        export LANG=en_US.UTF-8
         AGKOZAK_CUSTOM_PROMPT=$'%(!.%S%B.%B%F{green})%n%1v%(!.%b%s.%f%b) '
         AGKOZAK_CUSTOM_PROMPT+='%B%F{blue}%2v%f%b'
         AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{243}%3v%f.)\n'
