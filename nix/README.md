@@ -2,7 +2,7 @@
 
 这份配置用 Home Manager 管理当前用户的命令和点文件。它不安装系统，也不启动 Docker。运行 `setup.sh` 时可以改主机名、Git 用户名和登录 shell。Linux 用户名取自当前账号，同一份配置可以在 `x86_64-linux` 和 `aarch64-linux` 上使用。
 
-装完之后，新开的 zsh 里会有 Helix、tmux、eza、bat、fd、fzf、git，以及原来 `zshrc` 里的那些别名。Node.js 由 `n` 装到 `~/.n`。机器上还没有 `node` 时，第一次 `setup` 会执行 `n lts`；之后用 `n 22` 或 `n lts` 自己切换，配置不会在下次 setup 时把版本改回去。`home.nix` 里的 `npmGlobals` 会装到 `~/.local/bin`。某一项要锁版本时写成 `http-server@14` 这种 npm 范围。已有的 `~/.zshrc`、Helix 和 tmux 配置会被改成符号链接，原文件备份为同名加 `.backup`。
+装完之后，新开的 zsh 里会有 Helix、tmux、eza、bat、fd、fzf、git，以及原来 `zshrc` 里的那些别名。每个 Nix 包和 npm 全局包的版本写在 `versions.nix`。应用时会核对锁定的 nixpkgs 里 `pkgs.<name>.version`，不一致就停止。Node.js 由 `n` 装到 `~/.n`，版本也在 `versions.nix`；机器上还没有 `node` 时，第一次 `setup` 会安装这个版本。之后用 `n 22` 或 `n lts` 自己切换，配置不会在下次 setup 时把版本改回去。npm 全局包装到 `~/.local/bin`，规格是 `名字@版本`。已有的 `~/.zshrc`、Helix 和 tmux 配置会被改成符号链接，原文件备份为同名加 `.backup`。
 
 ## 新机器上怎么做
 
@@ -25,7 +25,9 @@ CHINA_MAINLAND=0 ./setup.sh
 
 镜像选择写进 `/etc/nix/nix.conf`，所以需要能 `sudo`。如果 Nix 报 `nix/flake.nix is not tracked by Git`，说明当前目录还不是一次完整克隆，先在仓库根目录执行 `git add nix`，然后再运行 `./setup.sh`。
 
-以后改了 `home.nix`，在 `nix/` 里重新执行 `./setup.sh`。
+以后改了 `home.nix`、`versions.nix` 或 `config/` 里的文件，在 `nix/` 里重新执行 `./setup.sh`。zsh、tmux、Helix、broot、Cargo 和 Nix 的配置在 `config/`，`home.nix` 只引用这些文件。
+
+换 Nix 包版本时，先改 `flake.nix` 里的 nixpkgs 提交并更新 `flake.lock`，再把 `versions.nix` 改成新快照里的 `pkgs.<name>.version`。只改版本号、不改 nixpkgs 提交，核对会失败，因为一份 nixpkgs 提交里每个包只有一个版本。npm 的版本只改 `versions.nix` 里的字符串。zsh 插件仍然用 `flake.nix` 里的 Git 提交号锁定。
 
 `CHINA_MAINLAND` 的规则和原来的 `setup.sh` 相同：只有值正好是 `0` 才走官方源，不设置就用国内镜像。zsh 每次启动都会先读 `~/.zshrc-private`，再决定这些地址：
 

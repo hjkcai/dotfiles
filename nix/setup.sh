@@ -115,7 +115,7 @@ FLAKE_DIR=`pwd`
 if [ "$CHINA_MAINLAND" != '0' ]; then
   STAGE=`mktemp -d`
   trap 'rm -rf "$STAGE"' EXIT
-  cp -a flake.nix flake.lock home.nix "$STAGE/"
+  cp -a flake.nix flake.lock home.nix versions.nix config "$STAGE/"
   sed -i "s|https://github.com/|https://$GITHUB/|g" "$STAGE/flake.nix" "$STAGE/flake.lock"
   FLAKE_DIR=$STAGE
 fi
