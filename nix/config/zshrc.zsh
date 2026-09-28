@@ -1,3 +1,5 @@
+setopt PIPE_FAIL
+
 export LANG=en_US.UTF-8
 
 if [ "$CHINA_MAINLAND" != '0' ]; then
