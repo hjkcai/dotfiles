@@ -118,6 +118,19 @@
         "url": "https://github.com/unixorn/fzf-zsh-plugin/archive/e3894e83a3e8a3e8751456d56c51bb49b34e8d2b.tar.gz"
       }
     },
+    "herdr-automatic-rename": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790468693,
+        "narHash": "sha256-xnkPi8qX+HfjjPQGtL+1eu2xg7X4nc8NiP0uJpb0/jg=",
+        "type": "tarball",
+        "url": "https://github.com/qu8n/herdr-automatic-rename/archive/72bbc7ec93f483be8aea2dcc09407ec8bd6bd5fa.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/qu8n/herdr-automatic-rename/archive/72bbc7ec93f483be8aea2dcc09407ec8bd6bd5fa.tar.gz"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -211,6 +224,7 @@
         "fast-syntax-highlighting": "fast-syntax-highlighting",
         "fzf-tab": "fzf-tab",
         "fzf-zsh-plugin": "fzf-zsh-plugin",
+        "herdr-automatic-rename": "herdr-automatic-rename",
         "home-manager": "home-manager",
         "hunk": "hunk",
         "n": "n",

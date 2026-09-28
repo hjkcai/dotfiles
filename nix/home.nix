@@ -93,6 +93,17 @@ let
     }
   ];
 
+  # Same directory name as `herdr plugin install`: slug plus the first 6 bytes
+  # of sha256(plugin id), hex. See plugin_managed_path_component in herdr 0.9.1.
+  herdrAutomaticRename = inputs.herdr-automatic-rename;
+  herdrAutomaticRenameManifest = builtins.fromTOML (
+    builtins.readFile "${herdrAutomaticRename}/herdr-plugin.toml"
+  );
+  herdrAutomaticRenameId = herdrAutomaticRenameManifest.id;
+  herdrAutomaticRenameCheckout = "herdr/plugins/github/${herdrAutomaticRenameId}-${
+    builtins.substring 0 12 (builtins.hashString "sha256" herdrAutomaticRenameId)
+  }";
+
   draculaNord = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "dracula-nord";
     version = inputs.dracula-nord.shortRev or "github";
@@ -182,6 +193,9 @@ in
 
   xdg.configFile."herdr/config.toml".source = ./config/herdr.toml;
   xdg.configFile."herdr-automatic-rename/config.sh".source = ./config/herdr-automatic-rename.sh;
+  # plugins.json stays a normal file. Herdr rewrites it when the registry changes,
+  # and a symlink into the Nix store cannot be updated.
+  xdg.configFile.${herdrAutomaticRenameCheckout}.source = herdrAutomaticRename;
 
   xdg.configFile."leaf/config.toml".source = ./config/leaf.toml;
   xdg.configFile."leaf/nord.toml".source = ./config/leaf-nord.toml;
@@ -227,6 +241,19 @@ in
       (lib.mkAfter zshrcAfter)
     ];
   };
+
+  # `plugin install` would git-clone a second copy and refuse to replace this
+  # checkout. Link registers the pinned tree in plugins.json, including when
+  # the Herdr server is already running. Skip when that entry already points here,
+  # so a disabled plugin is not turned back on at every setup.
+  home.activation.linkHerdrAutomaticRename = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    checkout=${lib.escapeShellArg herdrAutomaticRename}
+    list="$(${pin "herdr"}/bin/herdr plugin list --json)"
+    root="$(printf '%s\n' "$list" | ${pin "jq"}/bin/jq -r --arg id ${lib.escapeShellArg herdrAutomaticRenameId} '.result.plugins[] | select(.plugin_id==$id) | .plugin_root')"
+    if [ "$root" != "$checkout" ]; then
+      ${pin "herdr"}/bin/herdr plugin link "$checkout" >/dev/null
+    fi
+  '';
 
   # Node itself is installed by tj/n into $N_PREFIX. This only downloads a version when none is present.
   home.activation.npmGlobals = lib.hm.dag.entryAfter [ "installPackages" ] ''

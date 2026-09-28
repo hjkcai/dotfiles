@@ -57,6 +57,12 @@
       url = "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz";
       flake = false;
     };
+    # herdr plugin install clones this repo. The checkout is pinned here instead.
+    # Plugin version 0.12.0. HEAD on 2026-09-27.
+    herdr-automatic-rename = {
+      url = "https://github.com/qu8n/herdr-automatic-rename/archive/72bbc7ec93f483be8aea2dcc09407ec8bd6bd5fa.tar.gz";
+      flake = false;
+    };
     # nixpkgs has no tj/n package. Pin the upstream script instead.
     n = {
       url = "https://github.com/tj/n/archive/371affba8a21ec95ca1cab784ef409c879e6ce83.tar.gz";
