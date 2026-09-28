@@ -23,17 +23,10 @@ function zvm_after_init() {
 
   # fzf & Nord theme
   source $ZSH_CUSTOM/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
-  local -a fzf_nord=(
-    '--color=fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C'
-    '--color=pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
-  )
-  export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} ${fzf_nord[*]}"
-  # Completion uses the same options as widgets: height, marker, pointer, preview, binds, colors.
   zstyle ':fzf-tab:*' use-fzf-default-opts yes
-  # fzf-tab appends its own --height. Repeat the configured one so it stays last.
-  if [[ $FZF_DEFAULT_OPTS =~ '--height[= ]([^[:space:]]+)' ]]; then
-    zstyle ':fzf-tab:*' fzf-flags "--height=${match[1]}"
-  fi
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+    --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
+    --color pointer:#BF616A,info:#4C566A,spinner:#4C566A,header:#4C566A,prompt:#81A1C1,marker:#EBCB8B'
 
   # zvm_init runs from precmd, after `fzf --zsh`, and rebinds Ctrl-R.
   bindkey -M viins '^R' fzf-history-widget
