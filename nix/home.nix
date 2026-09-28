@@ -20,7 +20,10 @@ let
   china = builtins.getEnv "CHINA_MAINLAND" != "0";
   gitName = builtins.getEnv "GIT_NAME";
   gitEmail = builtins.getEnv "GIT_EMAIL";
-  versions = import ./versions.nix;
+  nodeVersion = "24";
+
+  # herdr is not in the main nixos-26.05 snapshot.
+  herdr = inputs.nixpkgs-herdr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.herdr;
 
   # Oh My Zsh is inserted at this line. The two sides stay in source order.
   zshrcParts =
@@ -34,21 +37,7 @@ let
   zshrcBefore = builtins.elemAt zshrcParts 0;
   zshrcAfter = builtins.elemAt zshrcParts 1;
 
-  # pkgs.<name> from the locked nixpkgs must be this exact version.
-  pin = name:
-    let
-      pkg = pkgs.${name};
-      want = versions.packages.${name};
-    in
-    if pkg.version != want then
-      throw ''
-        ${name} from nixpkgs is ${pkg.version}, but versions.nix pins ${want}.
-        Update versions.nix after changing the nixpkgs commit in flake.nix.
-      ''
-    else
-      pkg;
-
-  n = pkgs.runCommand "n-${versions.n}" { } ''
+  n = pkgs.runCommand "n" { } ''
     mkdir -p $out/bin
     cp ${inputs.n}/bin/n $out/bin/n
     chmod +x $out/bin/n
@@ -56,7 +45,19 @@ let
 
   hunkPackage = inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk;
 
-  npmGlobals = lib.mapAttrsToList (name: version: "${name}@${version}") versions.npm;
+  npmGlobals = lib.mapAttrsToList (name: version: "${name}@${version}") {
+    "@playwright/cli" = "0.1.21";
+    "@rivolink/leaf" = "1.28.2";
+    concurrently = "10.0.5";
+    http-server = "14.1.1";
+    npm-check-updates = "23.1.0";
+    pm2 = "7.0.4";
+    prettier = "3.9.9";
+    source-map-explorer = "2.5.3";
+    tsx = "4.23.15";
+    typescript = "7.0.2";
+    whistle = "2.10.10";
+  };
 
   zshCustom = pkgs.linkFarm "oh-my-zsh-custom" [
     {
@@ -128,9 +129,42 @@ in
   ];
   home.sessionVariables.N_PREFIX = "${config.home.homeDirectory}/.n";
 
-  home.packages =
-    map pin (lib.filter (name: !builtins.elem name versions.programs) (builtins.attrNames versions.packages))
-    ++ [ n ];
+  home.packages = with pkgs; [
+    autorestic
+    broot
+    curl
+    doggo
+    duf
+    eza
+    fastfetch
+    fd
+    ffmpeg
+    git-lfs
+    herdr
+    htop
+    httpie
+    jq
+    lsof
+    n
+    ncdu
+    nmap
+    p7zip
+    pnpm
+    redu
+    restic
+    rhash
+    ripgrep
+    rsync
+    sd
+    tealdeer
+    unzip
+    vim
+    viu
+    wget
+    which
+    witr
+    zip
+  ];
 
   programs.git = {
     enable = true;
@@ -165,7 +199,6 @@ in
 
   programs.tmux = {
     enable = true;
-    package = pin "tmux";
     prefix = "C-a";
     mouse = true;
     baseIndex = 1;
@@ -202,20 +235,12 @@ in
 
   programs.hunk = {
     enable = true;
-    package =
-      if hunkPackage.version != versions.hunk then
-        throw ''
-          hunk from the flake input is ${hunkPackage.version}, but versions.nix pins ${versions.hunk}.
-          Update versions.nix after changing the hunk commit in flake.nix.
-        ''
-      else
-        hunkPackage;
+    package = hunkPackage;
     settings = builtins.fromTOML (builtins.readFile ./config/hunk.toml);
   };
 
   programs.zsh = {
     enable = true;
-    package = pin "zsh";
     setOptions = [ "HIST_IGNORE_SPACE" ];
     oh-my-zsh = {
       enable = true;
@@ -248,10 +273,10 @@ in
   # so a disabled plugin is not turned back on at every setup.
   home.activation.linkHerdrAutomaticRename = lib.hm.dag.entryAfter [ "installPackages" ] ''
     checkout=${lib.escapeShellArg herdrAutomaticRename}
-    list="$(${pin "herdr"}/bin/herdr plugin list --json)"
-    root="$(printf '%s\n' "$list" | ${pin "jq"}/bin/jq -r --arg id ${lib.escapeShellArg herdrAutomaticRenameId} '.result.plugins[] | select(.plugin_id==$id) | .plugin_root')"
+    list="$(${herdr}/bin/herdr plugin list --json)"
+    root="$(printf '%s\n' "$list" | ${pkgs.jq}/bin/jq -r --arg id ${lib.escapeShellArg herdrAutomaticRenameId} '.result.plugins[] | select(.plugin_id==$id) | .plugin_root')"
     if [ "$root" != "$checkout" ]; then
-      ${pin "herdr"}/bin/herdr plugin link "$checkout" >/dev/null
+      ${herdr}/bin/herdr plugin link "$checkout" >/dev/null
     fi
   '';
 
@@ -273,7 +298,7 @@ in
       export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
     fi
     if ! command -v node >/dev/null 2>&1; then
-      n ${versions.node}
+      n ${nodeVersion}
     fi
     npm install --global --prefix "$HOME/.local" ${lib.escapeShellArgs npmGlobals}
   '';

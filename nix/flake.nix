@@ -11,11 +11,18 @@
   inputs = {
     # These GitHub archive URLs are the canonical bytes recorded in flake.lock.
     # setup.sh fetches them through ghfast.top when CHINA_MAINLAND is not 0.
-    nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz";
+    # Stable nixos-26.05. Find its current commit with:
+    # git ls-remote https://github.com/NixOS/nixpkgs.git refs/heads/nixos-26.05
+    # Replace the commit below and run `nix flake lock` to update this snapshot.
+    nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/5e2305d577ca00acbba631b05cb1094d172b29f3.tar.gz";
+    # Match the Home Manager release to the main nixpkgs release.
+    # git ls-remote https://github.com/nix-community/home-manager.git refs/heads/release-26.05
     home-manager = {
-      url = "https://github.com/nix-community/home-manager/archive/4b9add8645d5e2b0f7de18f7a442d08fe2bdcc91.tar.gz";
+      url = "https://github.com/nix-community/home-manager/archive/a6631107a83ceab5872f298a2ea710859c80c4cb.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # herdr is not yet available in nixos-26.05. Keep it on its own snapshot.
+    nixpkgs-herdr.url = "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz";
 
     agkozak-zsh-prompt = {
       url = "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz";
