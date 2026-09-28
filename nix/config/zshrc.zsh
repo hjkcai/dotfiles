@@ -54,7 +54,8 @@ export BAT_THEME=Nord
 alias cat="bat -pp"
 
 
-# brootif command -v broot > /dev/null; then
+# broot
+if command -v broot > /dev/null; then
   eval "$(broot --print-shell-function zsh)"
 fi
 
