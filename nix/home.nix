@@ -238,6 +238,9 @@ in
   xdg.configFile."leaf/config.toml".source = ./config/leaf.toml;
   xdg.configFile."leaf/nord.toml".source = ./config/leaf-nord.toml;
 
+  xdg.configFile."opencode/cli.json".source = ./config/opencode-cli.json;
+  xdg.configFile."opencode/themes/my-nord.json".source = ./config/opencode-my-nord.json;
+
   programs.hunk = {
     enable = true;
     package = hunkPackage;

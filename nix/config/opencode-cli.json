@@ -1,0 +1,43 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "theme": {
+    "name": "my-nord",
+    "mode": "dark"
+  },
+  "session": {
+    "sidebar": "hide",
+    "scrollbar": false,
+    "thinking": "hide",
+    "markdown": "rendered",
+    "image_preview": false,
+    "permissions": "autoaccept",
+    "grouping": "auto"
+  },
+  "tabs": {
+    "enabled": false
+  },
+  "terminal": {
+    "copy": "select",
+    "title": true
+  },
+  "diffs": {
+    "view": "unified",
+    "wrap": "word"
+  },
+  "plugins": [
+    "@prevalentware/opencode-loop-plugin"
+  ],
+  "mini": {
+    "thinking": "hide",
+    "tools": "show",
+    "shell_output": "show",
+    "turn_summary": "show",
+    "footer": "show"
+  },
+  "debug": {
+    "devtools": false
+  },
+  "attention": {
+    "notifications": true
+  }
+}
