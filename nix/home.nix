@@ -25,6 +25,9 @@ let
   # herdr is not in the main nixos-26.05 snapshot.
   herdr = inputs.nixpkgs-herdr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.herdr;
 
+  # broot tracks nixpkgs-unstable. Everything else stays on nixos-26.05.
+  broot = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.broot;
+
   # Oh My Zsh is inserted at this line. The two sides stay in source order.
   zshrcParts =
     let
@@ -140,6 +143,8 @@ in
     fd
     ffmpeg
     git-lfs
+    # CLI and pam_google_authenticator.so. The TOTP secret stays on the machine.
+    google-authenticator
     herdr
     htop
     httpie
@@ -221,8 +226,8 @@ in
     source = ./config/cargo.toml;
   };
 
-  xdg.configFile."broot/nord.toml".source = "${inputs.broot-nord}/broot.skin";
-  xdg.configFile."broot/conf.hjson".source = ./config/broot.hjson;
+  xdg.configFile."broot/nord.toml".source = ./config/broot-nord.toml;
+  xdg.configFile."broot/conf.toml".source = ./config/broot.toml;
 
   xdg.configFile."herdr/config.toml".source = ./config/herdr.toml;
   xdg.configFile."herdr-automatic-rename/config.sh".source = ./config/herdr-automatic-rename.sh;

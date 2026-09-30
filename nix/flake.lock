@@ -13,19 +13,6 @@
         "url": "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz"
       }
     },
-    "broot-nord": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1634738995,
-        "narHash": "sha256-p+xLTFnZgAB6c91KbcQfZrJ9XDNtJVMeqcdddIZSaiY=",
-        "type": "tarball",
-        "url": "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz"
-      }
-    },
     "bun2nix": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -228,10 +215,21 @@
         "url": "https://github.com/nix-community/nixpkgs.lib/archive/72716169fe93074c333e8d0173151350670b824c.tar.gz"
       }
     },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1790578696,
+        "narHash": "sha256-ZoxIApko70jCdbH3l20HWXOBaT2HZd87orzd2yJ9dVE=",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "agkozak-zsh-prompt": "agkozak-zsh-prompt",
-        "broot-nord": "broot-nord",
         "dracula-nord": "dracula-nord",
         "fast-syntax-highlighting": "fast-syntax-highlighting",
         "fzf-tab": "fzf-tab",
@@ -242,6 +240,7 @@
         "n": "n",
         "nixpkgs": "nixpkgs",
         "nixpkgs-herdr": "nixpkgs-herdr",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "zsh-autosuggestions": "zsh-autosuggestions",
         "zsh-docker-aliases": "zsh-docker-aliases",
         "zsh-vi-mode": "zsh-vi-mode",

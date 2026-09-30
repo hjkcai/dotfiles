@@ -1,0 +1,50 @@
+imports = [
+  { luma = ["dark", "unknown"], file = "nord.toml" },
+]
+
+default_flags = "-g"
+
+# User verbs are tried first. Markdown open comes before the generic file open.
+[[verbs]]
+key = "enter"
+extensions = ["md"]
+apply_to = "file"
+external = "leaf {file}"
+leave_broot = false
+
+[[verbs]]
+key = "alt-enter"
+extensions = ["md"]
+apply_to = "file"
+external = "leaf {file}"
+leave_broot = true
+
+[[verbs]]
+key = "enter"
+apply_to = "file"
+external = "$EDITOR {file}"
+leave_broot = false
+
+[[verbs]]
+key = "alt-enter"
+apply_to = "file"
+external = "$EDITOR {file}"
+leave_broot = true
+
+[[verbs]]
+invocation = "edit"
+shortcut = "e"
+apply_to = "file"
+external = "$EDITOR {file}"
+leave_broot = false
+
+[[verbs]]
+invocation = "edit_leave"
+apply_to = "file"
+external = "$EDITOR {file}"
+leave_broot = true
+
+[[verbs]]
+key = "ctrl-t"
+internal = ":toggle_tree"
+

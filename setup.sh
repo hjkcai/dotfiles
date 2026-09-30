@@ -253,8 +253,10 @@ fi
 if hasCommand "broot"; then
   section "Installing broot..."
   zsh -c 'broot --install'
-  curl https://$GITHUB_RAW/kreigor/broot-nord-theme/main/broot.skin > $HOME/.config/broot/nord.toml
-  sed -i "s|dark-blue-skin.hjson|nord.toml|" $HOME/.config/broot/conf.hjson
+  cp "$(dirname "$0")/nix/config/broot-nord.toml" $HOME/.config/broot/nord.toml
+  cp "$(dirname "$0")/nix/config/broot.toml" $HOME/.config/broot/conf.toml
+  # broot reads conf.hjson whenever that file exists, and ignores conf.toml.
+  rm -f $HOME/.config/broot/conf.hjson
 fi
 
 # tmux config

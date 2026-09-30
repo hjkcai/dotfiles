@@ -23,6 +23,10 @@
     };
     # herdr is not yet available in nixos-26.05. Keep it on its own snapshot.
     nixpkgs-herdr.url = "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz";
+    # broot tracks nixos-unstable. The 26.05 snapshot lags behind.
+    # Current tip: curl -fsSL https://channels.nixos.org/nixos-unstable/git-revision
+    # Replace the commit and run `nix flake lock --update-input nixpkgs-unstable`.
+    nixpkgs-unstable.url = "https://github.com/NixOS/nixpkgs/archive/7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f.tar.gz";
 
     agkozak-zsh-prompt = {
       url = "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz";
@@ -58,10 +62,6 @@
     };
     dracula-nord = {
       url = "https://github.com/hjkcai/dracula-nord/archive/636c199a1461df66237e55918dfe43c4537e6860.tar.gz";
-      flake = false;
-    };
-    broot-nord = {
-      url = "https://github.com/kreigor/broot-nord-theme/archive/a4315f0e82e892227b0da0f3228128f809a48243.tar.gz";
       flake = false;
     };
     # herdr plugin install clones this repo. The checkout is pinned here instead.

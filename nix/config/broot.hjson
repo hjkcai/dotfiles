@@ -1,9 +1,0 @@
-imports: [
-  {
-    luma: [
-      dark
-      unknown
-    ]
-    file: nord.toml
-  }
-]
