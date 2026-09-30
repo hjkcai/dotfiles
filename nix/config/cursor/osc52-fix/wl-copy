@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+payload="$(base64 | tr -d '\n')"
+
+if [ -w /dev/tty ]; then
+  printf '\033]52;c;%s\007' "$payload" > /dev/tty
+else
+  printf '\033]52;c;%s\007' "$payload"
+fi

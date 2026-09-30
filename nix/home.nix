@@ -118,6 +118,7 @@ in
 {
   imports = [
     inputs.hunk.homeManagerModules.default
+    ./agent
   ];
 
   home.username = username;
@@ -240,6 +241,11 @@ in
 
   xdg.configFile."opencode/cli.json".source = ./config/opencode-cli.json;
   xdg.configFile."opencode/themes/my-nord.json".source = ./config/opencode-my-nord.json;
+
+  # cli-config.json and mcp.json stay real files. Cursor rewrites both.
+  home.file.".cursor/hooks.json".source = ./config/cursor/hooks.json;
+  home.file.".cursor/hooks/agents-md-context.sh".source = ./config/cursor/hooks/agents-md-context.sh;
+  home.file.".cursor/osc52-fix/wl-copy".source = ./config/cursor/osc52-fix/wl-copy;
 
   programs.hunk = {
     enable = true;

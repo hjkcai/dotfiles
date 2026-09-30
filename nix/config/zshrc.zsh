@@ -160,6 +160,11 @@ for _f in ${HOME}/.config/herdr/plugins/github/herdr-automatic-rename-*/shell/ho
   break
 done
 
+# agent looks up wl-copy on PATH. cursor-osc52 is not a real Wayland display.
+cursor() {
+  WAYLAND_DISPLAY=cursor-osc52 PATH="$HOME/.cursor/osc52-fix:$PATH" agent "$@"
+}
+
 # Private
 if [ -f "$HOME/.zshrc-private" ]; then
   source "$HOME/.zshrc-private"
