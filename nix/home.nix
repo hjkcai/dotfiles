@@ -134,8 +134,8 @@ in
   home.sessionVariables.N_PREFIX = "${config.home.homeDirectory}/.n";
 
   home.packages = with pkgs; [
-    # adb, fastboot, and the rest of the Android SDK platform tools.
     android-tools
+    aria2
     autorestic
     broot
     curl
@@ -150,7 +150,6 @@ in
     google-authenticator
     herdr
     htop
-    httpie
     jq
     lsof
     n
@@ -171,6 +170,7 @@ in
     wget
     which
     witr
+    xh
     zip
   ];
 

@@ -136,6 +136,7 @@ alias unset-proxy="unset http_proxy && unset https_proxy"
 alias clash-proxy="export http_proxy=http://127.0.0.1:7890 && export https_proxy=http://127.0.0.1:7890"
 
 # Other
+alias http="xh"
 alias ports-usage="lsof -i -P -sTCP:LISTEN"
 alias hs="http-server"
 alias sudo="sudo " # sudo magic: https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
