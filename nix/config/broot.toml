@@ -48,3 +48,10 @@ leave_broot = true
 key = "ctrl-t"
 internal = ":toggle_tree"
 
+# :sh starts $SHELL in the selected directory. Exit returns to broot.
+[[verbs]]
+invocation = "sh"
+external = "$SHELL"
+leave_broot = false
+set_working_dir = true
+
