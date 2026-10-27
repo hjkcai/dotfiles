@@ -18,8 +18,67 @@ let
 
   # Same rule as setup.sh: only CHINA_MAINLAND=0 uses upstream.
   china = builtins.getEnv "CHINA_MAINLAND" != "0";
-  gitName = builtins.getEnv "GIT_NAME";
-  gitEmail = builtins.getEnv "GIT_EMAIL";
+
+  # An empty GIT_NAME or GIT_EMAIL means the setup prompt did not replace that
+  # field. Read the identity already on this machine so the rewritten
+  # ~/.gitconfig keeps it. ~/.gitconfig overrides the XDG file, matching git.
+  # In pure eval, pathExists on these paths is false and the read is skipped.
+  parseGitConfig = text:
+    let
+      step = acc: rawLine:
+        let
+          line = lib.removeSuffix "\r" (lib.trim rawLine);
+          section = builtins.match "\\[(.*)].*" line;
+          field = builtins.match "([A-Za-z0-9-]+)[[:space:]]*=[[:space:]]*(.*)" line;
+          valueOf = raw:
+            let
+              trimmed = lib.trim raw;
+              quoted = builtins.match "\"(.*)\"[[:space:]]*(#.*)?" trimmed;
+              bare = builtins.match "([^#]*).*" trimmed;
+            in
+            if quoted != null then
+              builtins.head quoted
+            else if bare != null then
+              lib.trim (builtins.head bare)
+            else
+              trimmed;
+        in
+        if line == "" || lib.hasPrefix "#" line || lib.hasPrefix ";" line then
+          acc
+        else if section != null then
+          acc // { section = lib.toLower (lib.trim (builtins.head section)); }
+        else if field != null && acc.section or "" == "user" then
+          let
+            key = lib.toLower (builtins.head field);
+            value = valueOf (builtins.elemAt field 1);
+          in
+          if key == "name" || key == "email" then acc // { ${key} = value; } else acc
+        else
+          acc;
+      parsed = builtins.foldl' step { section = ""; } (lib.splitString "\n" text);
+    in
+    {
+      name = parsed.name or "";
+      email = parsed.email or "";
+    };
+
+  readGitUser = path:
+    if builtins.pathExists path then parseGitConfig (builtins.readFile path) else { name = ""; email = ""; };
+
+  gitFromFile =
+    let
+      xdgConfigHome = let fromEnv = builtins.getEnv "XDG_CONFIG_HOME"; in if fromEnv == "" then "${homeDirectory}/.config" else fromEnv;
+      fromXdg = readGitUser "${xdgConfigHome}/git/config";
+      fromGlobal = readGitUser "${homeDirectory}/.gitconfig";
+      pick = primary: fallback: if primary != "" then primary else fallback;
+    in
+    {
+      name = pick fromGlobal.name fromXdg.name;
+      email = pick fromGlobal.email fromXdg.email;
+    };
+
+  gitName = let fromEnv = builtins.getEnv "GIT_NAME"; in if fromEnv != "" then fromEnv else gitFromFile.name;
+  gitEmail = let fromEnv = builtins.getEnv "GIT_EMAIL"; in if fromEnv != "" then fromEnv else gitFromFile.email;
   nodeVersion = "24";
 
   # herdr is not in the main nixos-26.05 snapshot.

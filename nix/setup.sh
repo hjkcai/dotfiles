@@ -25,7 +25,7 @@ if [ "$USER" = "root" ]; then echo "You cannot run this script as root. Remember
 if ! hasCommand "sudo"; then echo "Missing required command: sudo"; exit 1; fi
 if ! hasCommand "curl" && ! hasCommand "wget"; then echo "Missing required command: curl or wget"; exit 1; fi
 
-# -y skips the hostname and Git prompts, as if they were left empty.
+# -y skips the hostname and Git prompts. An empty Git answer keeps the name and email already on this machine.
 YES=0
 PASS=()
 for arg in "$@"; do
@@ -50,8 +50,8 @@ if ! [ -z "$NEW_HOSTNAME" ]; then
   sudo hostnamectl set-hostname $NEW_HOSTNAME
 fi
 
-# Git (Ask first)
-section "Please enter your default Git information. Leave it empty to skip."
+# Git (Ask first). Home Manager rewrites ~/.gitconfig from GIT_NAME and GIT_EMAIL.
+section "Please enter your default Git information. Leave it empty to keep the current name and email."
 echo -n 'Username: '
 if [ "$YES" = 1 ]; then
   echo
@@ -62,6 +62,11 @@ fi
 if ! [ -z "$GIT_NAME" ]; then
   echo -n 'Email: '
   read GIT_EMAIL
+fi
+# The Nix profile is not on PATH until after the switch. Git installed by a
+# previous setup lives there, and /usr/bin/git may be absent on a new machine.
+if [ -z "${GIT_NAME:-}" ] || [ -z "${GIT_EMAIL:-}" ]; then
+  export PATH="$HOME/.nix-profile/bin:$HOME/.local/state/nix/profiles/profile/bin${PATH:+:}$PATH"
 fi
 if [ -z "${GIT_NAME:-}" ] && hasCommand "git"; then
   GIT_NAME=`git config --global user.name || true`
