@@ -24,3 +24,6 @@ rows = [
   ["state_icon", "workspace"],
   ["terminal_title"]
 ]
+
+[experimental]
+kitty_graphics = true

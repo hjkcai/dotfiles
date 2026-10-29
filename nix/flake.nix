@@ -21,12 +21,11 @@
       url = "https://github.com/nix-community/home-manager/archive/a6631107a83ceab5872f298a2ea710859c80c4cb.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # herdr is not yet available in nixos-26.05. Keep it on its own snapshot.
-    nixpkgs-herdr.url = "https://github.com/NixOS/nixpkgs/archive/4975466d324710c576dc11ad614684e6bd8cad8e.tar.gz";
-    # broot tracks nixos-unstable. The 26.05 snapshot lags behind.
+    # herdr and broot track nixos-unstable. nixos-26.05 has no herdr, and its broot lags behind.
     # Current tip: curl -fsSL https://channels.nixos.org/nixos-unstable/git-revision
     # Replace the commit and run `nix flake lock --update-input nixpkgs-unstable`.
-    nixpkgs-unstable.url = "https://github.com/NixOS/nixpkgs/archive/7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f.tar.gz";
+    # This snapshot is nixos-unstable at 2026-10-27, which packages herdr 0.9.5 and broot 1.61.0.
+    nixpkgs-unstable.url = "https://github.com/NixOS/nixpkgs/archive/31ecbaca1bdefa45dffc409f0250bd8039ea0010.tar.gz";
 
     agkozak-zsh-prompt = {
       url = "https://github.com/agkozak/agkozak-zsh-prompt/archive/2055c42a6e2f5bdc6e8dc4b453b0084ced3f471a.tar.gz";

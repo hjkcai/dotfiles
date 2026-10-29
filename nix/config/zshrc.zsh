@@ -1,11 +1,16 @@
 setopt PIPE_FAIL
 
+# Mirror choice reads CHINA_MAINLAND from this file. Source it before that test.
+if [ -f "$HOME/.zshrc-private" ]; then
+  source "$HOME/.zshrc-private"
+fi
+
 export LANG=en_US.UTF-8
 
+# npm registry stays wherever ~/.npmrc points. Do not export NPM_CONFIG_REGISTRY.
 if [ "$CHINA_MAINLAND" != '0' ]; then
   export GITHUB=ghfast.top/https://github.com
   export GITHUB_RAW=ghfast.top/https://raw.githubusercontent.com
-  export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
   export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
 else
   export GITHUB=github.com
@@ -23,8 +28,10 @@ function zvm_after_init() {
   bindkey -v '^[[A' up-line-or-beginning-search
   bindkey -v '^[[B' down-line-or-beginning-search
 
-  # fzf & Nord theme
+  # fzf & Nord theme. Drop ~/.fzf/bin if the plugin prepends it; Nix fzf stays on PATH.
   source $ZSH_CUSTOM/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
+  path=(${path:#$HOME/.fzf/bin})
+  export PATH
   zstyle ':fzf-tab:*' use-fzf-default-opts yes
   export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
     --color fg:#D8DEE9,bg:#2E3440,hl:#A3BE8C,fg+:#D8DEE9,bg+:#434C5E,hl+:#A3BE8C
@@ -64,6 +71,9 @@ if [ -f "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
 fi
 
+alias zl="z -l"
+alias zc="z -c"
+
 alias ls="eza"
 alias l="eza -lF --time-style=long-iso"
 alias la="eza -lF --time-style=long-iso -a"
@@ -74,6 +84,7 @@ alias tree="eza --tree --level=2"
 
 # npm
 alias npmc="npm --registry=https://registry.npmmirror.com"
+alias yarnc="yarn --registry=https://registry.npmmirror.com"
 alias ni="npm i"
 alias nid="npm i -D"
 alias nig="npm i -g"
@@ -87,6 +98,18 @@ alias nrlf="npm run lint -- --fix"
 alias nrt="npm run test"
 alias nrtc="npm run test -- --coverage"
 alias nrtw="npm run test -- --watch"
+
+alias nx="npx nx"
+alias nxb="npx nx build"
+alias nxbs="npx nx build --skip-nx-cache --verbose"
+alias nxd="npx nx dev"
+alias nxrst="npx nx reset"
+
+npm-link() {
+  module="./node_modules/$1"
+  rm -r "$module"
+  ln -s "$2" "$module"
+}
 
 # pnpm
 alias pi="pnpm i"
@@ -166,7 +189,22 @@ cursor() {
   WAYLAND_DISPLAY=cursor-osc52 PATH="$HOME/.cursor/osc52-fix:$PATH" agent "$@"
 }
 
-# Private
+# Hooks in the private file register after oh-my-zsh. The early source above
+# only needed CHINA_MAINLAND; this one is safe to repeat.
 if [ -f "$HOME/.zshrc-private" ]; then
   source "$HOME/.zshrc-private"
 fi
+
+# Nix profile wins when the same command also exists in ~/.n, ~/.local, or ~/.cargo.
+# Node, npm, and CLIs that are not Nix packages stay on ~/.n/bin.
+path=(
+  ${HOME}/.local/state/nix/profiles/home-manager/bin(N)
+  ${HOME}/.nix-profile/bin(N)
+  ${HOME}/.n/bin(N)
+  ${HOME}/.local/bin(N)
+  ${HOME}/.bin(N)
+  ${HOME}/.cargo/bin(N)
+  $path
+)
+typeset -U path
+export PATH

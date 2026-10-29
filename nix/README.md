@@ -17,7 +17,7 @@ cd dotfiles/nix
 exec zsh
 ```
 
-每次运行都会重新写受管理的配置文件，包括 `~/.gitconfig`。Git 用户名留空则沿用当前值。`CHINA_MAINLAND` 不是 `0` 时（包含未设置），二进制缓存优先用中科大 `https://mirrors.ustc.edu.cn/nix-channels/store`，官方缓存留作后备。境外机器这样装：
+每次运行都会重新写受管理的配置文件。`~/.gitconfig` 不在其中：文件还不存在时，`setup.sh` 写入 `pull.rebase`、`credential.helper`，以及一份忽略 `**/.claude/settings.local.json` 的 excludes 文件。文件已经存在时保持原样；只有这次在提示里输入了用户名，才会改 `user.name` 和 `user.email`。`CHINA_MAINLAND` 不是 `0` 时（包含未设置），二进制缓存优先用中科大 `https://mirrors.ustc.edu.cn/nix-channels/store`，官方缓存留作后备。境外机器这样装：
 
 ```bash
 CHINA_MAINLAND=0 ./setup.sh
@@ -36,13 +36,13 @@ CHINA_MAINLAND=0 ./setup.sh
 | 用途 | `CHINA_MAINLAND` 不是 `0` | `CHINA_MAINLAND=0` |
 |---|---|---|
 | Nix 二进制缓存 | 中科大，其次 cache.nixos.org | cache.nixos.org |
-| npm | `https://registry.npmmirror.com/` | 不改你原来的 registry |
+| npm | 不改已有的 registry。还是 registry.npmjs.org 时，安装全局包才用 npmmirror | 不改你原来的 registry |
 | Node 二进制（`n`） | `https://mirrors.ustc.edu.cn/node/` | 官方 |
 | crates.io | 中科大 sparse index | 不写 `~/.cargo/config.toml` |
 | `GITHUB` / `GITHUB_RAW` | `ghfast.top` 前缀 | github.com |
 | `flake.lock` 里的源码包 | 同一份 GitHub 压缩包，经 `ghfast.top` 下载 | 直接从 github.com 下载 |
 
-人在境外时，把下面这一行放到 `~/.zshrc-private`，shell 里的 npm、Node 和 GitHub 地址下次开 zsh 就会换掉。Nix 缓存和 Cargo 配置是 `setup.sh` 写的，改完这个变量后要再执行一次 `CHINA_MAINLAND=0 ./setup.sh`。
+人在境外时，把下面这一行放到 `~/.zshrc-private` 的开头。zsh 会先读这个文件，再决定 Node 和 GitHub 的地址。npm 的 registry 仍由 `~/.npmrc` 决定。Nix 缓存和 Cargo 配置是 `setup.sh` 写的，改完这个变量后要再执行一次 `CHINA_MAINLAND=0 ./setup.sh`。
 
 ```bash
 export CHINA_MAINLAND=0

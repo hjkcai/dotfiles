@@ -19,73 +19,12 @@ let
   # Same rule as setup.sh: only CHINA_MAINLAND=0 uses upstream.
   china = builtins.getEnv "CHINA_MAINLAND" != "0";
 
-  # An empty GIT_NAME or GIT_EMAIL means the setup prompt did not replace that
-  # field. Read the identity already on this machine so the rewritten
-  # ~/.gitconfig keeps it. ~/.gitconfig overrides the XDG file, matching git.
-  # In pure eval, pathExists on these paths is false and the read is skipped.
-  parseGitConfig = text:
-    let
-      step = acc: rawLine:
-        let
-          line = lib.removeSuffix "\r" (lib.trim rawLine);
-          section = builtins.match "\\[(.*)].*" line;
-          field = builtins.match "([A-Za-z0-9-]+)[[:space:]]*=[[:space:]]*(.*)" line;
-          valueOf = raw:
-            let
-              trimmed = lib.trim raw;
-              quoted = builtins.match "\"(.*)\"[[:space:]]*(#.*)?" trimmed;
-              bare = builtins.match "([^#]*).*" trimmed;
-            in
-            if quoted != null then
-              builtins.head quoted
-            else if bare != null then
-              lib.trim (builtins.head bare)
-            else
-              trimmed;
-        in
-        if line == "" || lib.hasPrefix "#" line || lib.hasPrefix ";" line then
-          acc
-        else if section != null then
-          acc // { section = lib.toLower (lib.trim (builtins.head section)); }
-        else if field != null && acc.section or "" == "user" then
-          let
-            key = lib.toLower (builtins.head field);
-            value = valueOf (builtins.elemAt field 1);
-          in
-          if key == "name" || key == "email" then acc // { ${key} = value; } else acc
-        else
-          acc;
-      parsed = builtins.foldl' step { section = ""; } (lib.splitString "\n" text);
-    in
-    {
-      name = parsed.name or "";
-      email = parsed.email or "";
-    };
-
-  readGitUser = path:
-    if builtins.pathExists path then parseGitConfig (builtins.readFile path) else { name = ""; email = ""; };
-
-  gitFromFile =
-    let
-      xdgConfigHome = let fromEnv = builtins.getEnv "XDG_CONFIG_HOME"; in if fromEnv == "" then "${homeDirectory}/.config" else fromEnv;
-      fromXdg = readGitUser "${xdgConfigHome}/git/config";
-      fromGlobal = readGitUser "${homeDirectory}/.gitconfig";
-      pick = primary: fallback: if primary != "" then primary else fallback;
-    in
-    {
-      name = pick fromGlobal.name fromXdg.name;
-      email = pick fromGlobal.email fromXdg.email;
-    };
-
-  gitName = let fromEnv = builtins.getEnv "GIT_NAME"; in if fromEnv != "" then fromEnv else gitFromFile.name;
-  gitEmail = let fromEnv = builtins.getEnv "GIT_EMAIL"; in if fromEnv != "" then fromEnv else gitFromFile.email;
   nodeVersion = "24";
 
-  # herdr is not in the main nixos-26.05 snapshot.
-  herdr = inputs.nixpkgs-herdr.legacyPackages.${pkgs.stdenv.hostPlatform.system}.herdr;
-
-  # broot tracks nixpkgs-unstable. Everything else stays on nixos-26.05.
-  broot = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.broot;
+  # herdr and broot share nixpkgs-unstable. nixos-26.05 has no herdr.
+  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  herdr = unstable.herdr;
+  broot = unstable.broot;
 
   # Oh My Zsh is inserted at this line. The two sides stay in source order.
   zshrcParts =
@@ -157,7 +96,7 @@ let
   ];
 
   # Same directory name as `herdr plugin install`: slug plus the first 6 bytes
-  # of sha256(plugin id), hex. See plugin_managed_path_component in herdr 0.9.1.
+  # of sha256(plugin id), hex. See plugin_managed_path_component in herdr 0.9.5.
   herdrAutomaticRename = inputs.herdr-automatic-rename;
   herdrAutomaticRenameManifest = builtins.fromTOML (
     builtins.readFile "${herdrAutomaticRename}/herdr-plugin.toml"
@@ -204,6 +143,9 @@ in
     fastfetch
     fd
     ffmpeg
+    # The package only. ~/.gitconfig is written once by setup.sh, so a later
+    # switch cannot drop safe.directory or url.insteadOf.
+    git
     git-lfs
     # CLI and pam_google_authenticator.so. The TOTP secret stays on the machine.
     google-authenticator
@@ -215,7 +157,6 @@ in
     ncdu
     nmap
     p7zip
-    pnpm
     redu
     restic
     rhash
@@ -232,24 +173,6 @@ in
     xh
     zip
   ];
-
-  programs.git = {
-    enable = true;
-    ignores = [ "**/.claude/settings.local.json" ];
-    settings = {
-      pull.rebase = false;
-      credential.helper = "store";
-    } // lib.optionalAttrs (gitName != "" || gitEmail != "") {
-      user = lib.filterAttrs (_: value: value != "") {
-        name = gitName;
-        email = gitEmail;
-      };
-    };
-  };
-
-  # Git reads ~/.gitconfig over ~/.config/git/config, so the generated file has to live here.
-  xdg.configFile."git/config".enable = lib.mkForce false;
-  home.file.".gitconfig".text = config.xdg.configFile."git/config".text;
 
   programs.bat = {
     enable = true;
@@ -343,19 +266,43 @@ in
   };
 
   # `plugin install` would git-clone a second copy and refuse to replace this
-  # checkout. Link registers the pinned tree in plugins.json, including when
-  # the Herdr server is already running. Skip when that entry already points here,
-  # so a disabled plugin is not turned back on at every setup.
-  home.activation.linkHerdrAutomaticRename = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    checkout=${lib.escapeShellArg herdrAutomaticRename}
-    list="$(${herdr}/bin/herdr plugin list --json)"
-    root="$(printf '%s\n' "$list" | ${pkgs.jq}/bin/jq -r --arg id ${lib.escapeShellArg herdrAutomaticRenameId} '.result.plugins[] | select(.plugin_id==$id) | .plugin_root')"
-    if [ "$root" != "$checkout" ]; then
-      ${herdr}/bin/herdr plugin link "$checkout" >/dev/null
+  # checkout. Link registers the stable symlink, not the store path: the store
+  # path changes on the next update, and plugins.json is not managed by Nix.
+  # Skip when that entry already points here, so a disabled plugin is not turned
+  # back on at every setup. Runs after the symlink exists.
+  home.activation.linkHerdrAutomaticRename = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    stable=${lib.escapeShellArg "${config.xdg.configHome}/${herdrAutomaticRenameCheckout}"}
+    # A running older server refuses the new client. Stopping it would exit
+    # every pane, so leave plugins.json alone until the user restarts Herdr.
+    # The managed checkout is already symlinked at $stable, which is the path
+    # an existing registration uses.
+    list="$(${herdr}/bin/herdr plugin list --json 2>&1 || true)"
+    if printf '%s\n' "$list" | ${pkgs.gnugrep}/bin/grep -q protocol_mismatch; then
+      echo "herdr server is older than this client; plugin link skipped until herdr restarts" >&2
+    else
+      root="$(printf '%s\n' "$list" | ${pkgs.jq}/bin/jq -r --arg id ${lib.escapeShellArg herdrAutomaticRenameId} '.result.plugins[] | select(.plugin_id==$id) | .plugin_root')"
+      root_real=""
+      if [ -n "$root" ] && [ "$root" != "null" ]; then
+        root_real="$(${pkgs.coreutils}/bin/realpath "$root" 2>/dev/null || true)"
+      fi
+      stable_real="$(${pkgs.coreutils}/bin/realpath "$stable")"
+      if [ "$root_real" != "$stable_real" ]; then
+        link_out="$(${herdr}/bin/herdr plugin link "$stable" 2>&1)" || {
+          if printf '%s\n' "$link_out" | ${pkgs.gnugrep}/bin/grep -q protocol_mismatch; then
+            echo "herdr server is older than this client; plugin link skipped until herdr restarts" >&2
+          else
+            printf '%s\n' "$link_out" >&2
+            exit 1
+          fi
+        }
+      fi
     fi
   '';
 
   # Node itself is installed by tj/n into $N_PREFIX. This only downloads a version when none is present.
+  # Globals land in that same prefix, so they replace the bins already on PATH.
+  # An existing registry (for example a company mirror in ~/.npmrc) is kept.
+  # npmmirror is used only for the default registry.npmjs.org, and only in China mode.
   home.activation.npmGlobals = lib.hm.dag.entryAfter [ "installPackages" ] ''
     export N_PREFIX="$HOME/.n"
     export PATH="$N_PREFIX/bin:${lib.makeBinPath [
@@ -370,11 +317,16 @@ in
     ]}:$PATH"
     if [ "''${CHINA_MAINLAND:-}" != 0 ]; then
       export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
-      export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
+      registry="$(npm config get registry 2>/dev/null || true)"
+      case "$registry" in
+        https://registry.npmjs.org|https://registry.npmjs.org/)
+          export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com/
+          ;;
+      esac
     fi
     if ! command -v node >/dev/null 2>&1; then
       n ${nodeVersion}
     fi
-    npm install --global --prefix "$HOME/.local" ${lib.escapeShellArgs npmGlobals}
+    npm install --global --prefix "$N_PREFIX" ${lib.escapeShellArgs npmGlobals}
   '';
 }

@@ -50,7 +50,9 @@ if ! [ -z "$NEW_HOSTNAME" ]; then
   sudo hostnamectl set-hostname $NEW_HOSTNAME
 fi
 
-# Git (Ask first). Home Manager rewrites ~/.gitconfig from GIT_NAME and GIT_EMAIL.
+# Git identity is applied after git exists. An empty answer leaves ~/.gitconfig
+# untouched. Home Manager does not own that file.
+GIT_NAME_SET=0
 section "Please enter your default Git information. Leave it empty to keep the current name and email."
 echo -n 'Username: '
 if [ "$YES" = 1 ]; then
@@ -60,22 +62,10 @@ else
   read GIT_NAME
 fi
 if ! [ -z "$GIT_NAME" ]; then
+  GIT_NAME_SET=1
   echo -n 'Email: '
   read GIT_EMAIL
 fi
-# The Nix profile is not on PATH until after the switch. Git installed by a
-# previous setup lives there, and /usr/bin/git may be absent on a new machine.
-if [ -z "${GIT_NAME:-}" ] || [ -z "${GIT_EMAIL:-}" ]; then
-  export PATH="$HOME/.nix-profile/bin:$HOME/.local/state/nix/profiles/profile/bin${PATH:+:}$PATH"
-fi
-if [ -z "${GIT_NAME:-}" ] && hasCommand "git"; then
-  GIT_NAME=`git config --global user.name || true`
-fi
-if [ -z "${GIT_EMAIL:-}" ] && hasCommand "git"; then
-  GIT_EMAIL=`git config --global user.email || true`
-fi
-export GIT_NAME="${GIT_NAME:-}"
-export GIT_EMAIL="${GIT_EMAIL:-}"
 
 # Locale & Timezone
 if hasCommand "locale-gen"; then
@@ -134,6 +124,23 @@ if hasCommand "systemctl" && systemctl cat nix-daemon.service > /dev/null 2>&1; 
   sudo systemctl restart nix-daemon
 fi
 
+# broot ignores conf.toml while conf.hjson exists. Keep the old file beside it.
+if [ -f "$HOME/.config/broot/conf.hjson" ]; then
+  mv "$HOME/.config/broot/conf.hjson" "$HOME/.config/broot/conf.hjson.backup"
+fi
+
+# These bins would shadow the Nix packages. Keep them under a sibling name.
+move_aside() {
+  if [ -e "$1" ] || [ -L "$1" ]; then
+    if [ ! -e "$1.before-nix" ] && [ ! -L "$1.before-nix" ]; then
+      mv "$1" "$1.before-nix"
+    fi
+  fi
+}
+move_aside "$HOME/.local/bin/herdr"
+move_aside "$HOME/.n/bin/hunk"
+move_aside "$HOME/.n/bin/hunkdiff"
+
 # Home Manager
 # 覆盖 zsh、Helix、tmux 和命令行工具。原来的发行版包、oh-my-zsh、fzf、broot、Node.js 改由这一步安装。
 section "Installing the Home Manager configuration..."
@@ -150,23 +157,53 @@ cd "$FLAKE_DIR"
 system=`nix eval --impure --raw --expr 'builtins.currentSystem'`
 nix run --impure ".#home-manager" -- switch --impure -b backup --flake ".#$system" "$@"
 cd - > /dev/null
-export PATH="$HOME/.nix-profile/bin:$PATH"
+export PATH="$HOME/.local/state/nix/profiles/home-manager/bin:$HOME/.nix-profile/bin:$PATH"
 
 # Post-install check
 if ! hasCommand "git"; then echo "Missing required command: git"; exit 1; fi
 if ! hasCommand "zsh"; then echo "Missing required command: zsh"; exit 1; fi
 
+# Write ~/.gitconfig once. A later setup must not replace safe.directory or
+# url.insteadOf. A name typed at the prompt still updates those two keys.
+if [ ! -e "$HOME/.gitconfig" ]; then
+  section "Writing Git config..."
+  mkdir -p "$HOME/.config/git"
+  printf '%s\n' '**/.claude/settings.local.json' > "$HOME/.config/git/ignore"
+  git config --global core.excludesFile "$HOME/.config/git/ignore"
+  git config --global pull.rebase false
+  git config --global credential.helper store
+fi
+if [ "$GIT_NAME_SET" = 1 ]; then
+  git config --global user.name "$GIT_NAME"
+  if [ -n "${GIT_EMAIL:-}" ]; then
+    git config --global user.email "$GIT_EMAIL"
+  fi
+fi
+
 # zsh
+# /usr/bin/zsh reads the Home Manager ~/.zshrc. A /nix/store path changes on
+# upgrade, so it must not become the login shell.
 section "Changing default shell to zsh..."
-ZSH_PATH=`which zsh`
-if ! grep -qxF "$ZSH_PATH" /etc/shells; then
-  echo "$ZSH_PATH" | sudo tee -a /etc/shells > /dev/null
-fi
-if hasCommand "termux-change-repo"; then
-  chsh -s zsh
+if [ -x /usr/bin/zsh ]; then
+  ZSH_PATH=/usr/bin/zsh
 else
-  sudo chsh -s $ZSH_PATH $USER
+  ZSH_PATH=`which zsh`
 fi
+case "$ZSH_PATH" in
+  /nix/store/*)
+    echo "Leaving the login shell unchanged. $ZSH_PATH changes when Nix updates."
+    ;;
+  *)
+    if ! grep -qxF "$ZSH_PATH" /etc/shells; then
+      echo "$ZSH_PATH" | sudo tee -a /etc/shells > /dev/null
+    fi
+    if hasCommand "termux-change-repo"; then
+      chsh -s zsh
+    else
+      sudo chsh -s $ZSH_PATH $USER
+    fi
+    ;;
+esac
 
 section "Enjoy!"
 fastfetch
