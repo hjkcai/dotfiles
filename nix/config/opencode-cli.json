@@ -24,9 +24,6 @@
     "view": "unified",
     "wrap": "word"
   },
-  "plugins": [
-    "@prevalentware/opencode-loop-plugin"
-  ],
   "mini": {
     "thinking": "hide",
     "tools": "show",
