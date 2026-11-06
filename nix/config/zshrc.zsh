@@ -5,6 +5,10 @@ if [ -f "$HOME/.zshrc-private" ]; then
   source "$HOME/.zshrc-private"
 fi
 
+# A value already in this shell, or just set by the private file, is kept.
+# When neither has one, mainland mirrors are the default.
+export CHINA_MAINLAND="${CHINA_MAINLAND:-1}"
+
 export LANG=en_US.UTF-8
 
 # npm registry stays wherever ~/.npmrc points. Do not export NPM_CONFIG_REGISTRY.

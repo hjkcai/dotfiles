@@ -12,6 +12,10 @@ function hasCommand {
   return $?
 }
 
+# 当前 shell 已经导出过就沿用，包括 0。变量不存在时默认 1，后面的 Nix 求值也读这个值。
+CHINA_MAINLAND="${CHINA_MAINLAND:-1}"
+export CHINA_MAINLAND
+
 if [ "$CHINA_MAINLAND" != '0' ]; then
   GITHUB=ghfast.top/https://github.com
   GITHUB_RAW=ghfast.top/https://raw.githubusercontent.com

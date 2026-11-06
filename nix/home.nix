@@ -16,8 +16,12 @@ let
   in
     if fromEnv == "" then "/home/${username}" else fromEnv;
 
-  # Same rule as setup.sh: only CHINA_MAINLAND=0 uses upstream.
-  china = builtins.getEnv "CHINA_MAINLAND" != "0";
+  # setup.sh exports the current shell value, or 1 when that variable is absent.
+  # A direct nix run with no variable hits the same default. Only 0 uses upstream.
+  china = let
+    fromEnv = builtins.getEnv "CHINA_MAINLAND";
+    chinaMainland = if fromEnv == "" then "1" else fromEnv;
+  in chinaMainland != "0";
 
   nodeVersion = "24";
 
@@ -265,6 +269,32 @@ in
     ];
   };
 
+  # sshd starts a non-interactive shell and does not read ~/.zshrc, so the
+  # profile bin is absent from PATH. /usr/local/bin is on that compiled-in PATH.
+  # Point at the profile, not a store path: the store path changes on the next
+  # update, and this link would otherwise need root on every switch.
+  home.activation.linkRsync = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    if [[ ! -v DRY_RUN ]]; then
+      src=${lib.escapeShellArg "${config.home.homeDirectory}/.nix-profile/bin/rsync"}
+      dest=/usr/local/bin/rsync
+      if [[ ! -x $src ]]; then
+        echo "Home Manager profile has no rsync; not linking $dest" >&2
+      elif [[ -e $dest && ! -L $dest ]]; then
+        echo "$dest exists and is not a symlink" >&2
+        exit 1
+      else
+        current=""
+        if [[ -L $dest ]]; then
+          current="$(readlink "$dest")"
+        fi
+        if [[ $current != "$src" ]]; then
+          /usr/bin/sudo mkdir -p /usr/local/bin
+          /usr/bin/sudo ln -sfn "$src" "$dest"
+        fi
+      fi
+    fi
+  '';
+
   # `plugin install` would git-clone a second copy and refuse to replace this
   # checkout. Link registers the stable symlink, not the store path: the store
   # path changes on the next update, and plugins.json is not managed by Nix.
@@ -315,7 +345,7 @@ in
       pkgs.gnutar
       pkgs.xz
     ]}:$PATH"
-    if [ "''${CHINA_MAINLAND:-}" != 0 ]; then
+    if [ "''${CHINA_MAINLAND:-1}" != 0 ]; then
       export N_NODE_MIRROR=https://mirrors.ustc.edu.cn/node/
       registry="$(npm config get registry 2>/dev/null || true)"
       case "$registry" in

@@ -17,7 +17,7 @@ cd dotfiles/nix
 exec zsh
 ```
 
-每次运行都会重新写受管理的配置文件。`~/.gitconfig` 不在其中：文件还不存在时，`setup.sh` 写入 `pull.rebase`、`credential.helper`，以及一份忽略 `**/.claude/settings.local.json` 的 excludes 文件。文件已经存在时保持原样；只有这次在提示里输入了用户名，才会改 `user.name` 和 `user.email`。`CHINA_MAINLAND` 不是 `0` 时（包含未设置），二进制缓存优先用中科大 `https://mirrors.ustc.edu.cn/nix-channels/store`，官方缓存留作后备。境外机器这样装：
+每次运行都会重新写受管理的配置文件。`~/.gitconfig` 不在其中：文件还不存在时，`setup.sh` 写入 `pull.rebase`、`credential.helper`，以及一份忽略 `**/.claude/settings.local.json` 的 excludes 文件。文件已经存在时保持原样；只有这次在提示里输入了用户名，才会改 `user.name` 和 `user.email`。`setup.sh` 读取当前 shell 里的 `CHINA_MAINLAND`。变量已经存在时沿用这个值，变量不存在时默认是 `1`。值为 `0` 时走官方缓存。其余的值走国内镜像，二进制缓存优先用中科大 `https://mirrors.ustc.edu.cn/nix-channels/store`，官方缓存留作后备。境外机器这样装：
 
 ```bash
 CHINA_MAINLAND=0 ./setup.sh
@@ -27,11 +27,13 @@ CHINA_MAINLAND=0 ./setup.sh
 
 以后改了 `home.nix`、`agent/`、`versions.nix` 或 `config/` 里的文件，在 `nix/` 里重新执行 `./setup.sh`。zsh、tmux、Helix、broot、herdr、leaf、hunk、OpenCode 和 Cargo 的配置在 `config/`，`home.nix` 只引用这些文件。leaf 的 Nord 主题和 `config.toml` 放在同一目录，主题路径写相对路径。hunk 由它自己的 flake 安装，配置在 `config/hunk.toml`，扩展插件不在这份配置里。herdr 的 automatic-rename 插件同样用 flake 锁定 checkout，链接到 `~/.config/herdr/plugins/github/` 下 herdr 自己的目录名，setup 时若尚未登记则执行 `herdr plugin link`。插件开关写在 `config/herdr-automatic-rename.sh`。`~/.config/herdr/plugins.json` 不由 Nix 接管，herdr 会自己改这个注册表。OpenCode 的 `cli.json` 和 `themes/my-nord.json` 来自 `config/opencode-cli.json` 和 `config/opencode-my-nord.json`。同目录下的 `opencode.json`、插件和 lock 文件仍由 OpenCode 自己维护。`config/zshrc.zsh` 里的 `# {{HOME_MANAGER}}` 是 oh-my-zsh 的插入位置，这一行要保留，且只能有一行。
 
+非交互 SSH 不会读取 `~/.zshrc`，因此找不到 Home Manager profile 里的命令。`sshd` 编译时带上的 `PATH` 包含 `/usr/local/bin`。`setup.sh` 会把 `/usr/local/bin/rsync` 指到 `~/.nix-profile/bin/rsync`。链接指向 profile，下次更新变了 store 路径之后原来的链接仍然有效；已经指向这个路径时不会再次调用 `sudo`。
+
 `agent/AGENTS.md` 链到 `~/.cursor/AGENTS.md` 和 `~/.config/opencode/AGENTS.md`。`agent/skills/` 里每个子目录链到 `~/.cursor/skills/<name>` 和 `~/.config/opencode/skills/<name>`。Claude 的目录不接管。Cursor 的静态文件在 `config/cursor/`：`hooks.json`、`hooks/agents-md-context.sh`、`osc52-fix/wl-copy`。`zshrc.zsh` 里的 `cursor` 函数把 `PATH` 指到这个 `wl-copy`，并设置 `WAYLAND_DISPLAY=cursor-osc52`，让 `agent` 走 OSC 52。`cli-config.json` 和 `mcp.json` 仍由 Cursor 自己写。
 
 换 Nix 包版本时，先改 `flake.nix` 里的 nixpkgs 提交并更新 `flake.lock`，再把 `versions.nix` 改成新快照里的 `pkgs.<name>.version`。只改版本号、不改 nixpkgs 提交，核对会失败，因为一份 nixpkgs 提交里每个包只有一个版本。npm 的版本只改 `versions.nix` 里的字符串。hunk 改 `flake.nix` 里的提交和 `versions.nix` 里的版本字符串，两边要一致。zsh 插件仍然用 `flake.nix` 里的 Git 提交号锁定。
 
-`CHINA_MAINLAND` 的规则和原来的 `setup.sh` 相同：只有值正好是 `0` 才走官方源，不设置就用国内镜像。zsh 每次启动都会先读 `~/.zshrc-private`，再决定这些地址：
+`CHINA_MAINLAND` 的取值和原来的 `setup.sh` 相同。当前 shell 里已经有的值优先；这个变量还不存在时，默认是 `1`。值为 `0` 时走官方源，其余的值走国内镜像。zsh 每次启动都会先读 `~/.zshrc-private`。private 文件和当前 shell 都没有这个变量时，默认也是 `1`，然后再按这个值决定下面这些地址：
 
 | 用途 | `CHINA_MAINLAND` 不是 `0` | `CHINA_MAINLAND=0` |
 |---|---|---|
