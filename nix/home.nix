@@ -165,6 +165,7 @@ in
     restic
     rhash
     ripgrep
+    rsgain
     rsync
     sd
     tealdeer
